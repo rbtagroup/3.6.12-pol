@@ -1,3 +1,13 @@
+/*
+  RB TAXI Výčetka style map
+  1. Theme variables and base layout
+  2. Header, form controls, notices, buttons
+  3. Live dashboard and final report
+  4. Export-only rendering styles
+  5. Responsive rules
+  6. Versioned polish patches and platform/a11y overrides
+*/
+
 :root {
   --navy-950: #050a16;
   --navy-900: #08132b;
@@ -1625,4 +1635,59 @@ body.light-mode button.secondary {
 }
 body.light-mode .action-stack {
   border-color: rgba(15, 23, 42, 0.16);
+}
+
+/* Platform parity and a11y 3.6.24 */
+.header-status-stack {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.network-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(29, 209, 161, 0.24);
+  background: rgba(29, 209, 161, 0.08);
+  color: #b9f4e3;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.network-status .status-dot {
+  width: 7px;
+  height: 7px;
+  box-shadow: 0 0 0 5px rgba(77, 242, 163, 0.10);
+}
+.network-status.is-offline {
+  border-color: rgba(255, 107, 107, 0.30);
+  background: rgba(255, 107, 107, 0.10);
+  color: #ffd8d8;
+}
+.network-status.is-offline .status-dot {
+  background: var(--danger);
+  box-shadow: 0 0 0 5px rgba(255, 107, 107, 0.12);
+}
+.install-ios-help {
+  margin-top: 6px;
+  font-weight: 800;
+}
+body.light-mode .network-status {
+  color: #067647;
+  border-color: rgba(6, 118, 71, 0.28);
+  background: #ecfdf3;
+}
+body.light-mode .network-status.is-offline {
+  color: #b42318;
+  border-color: rgba(180, 35, 24, 0.28);
+  background: #fff1f2;
+}
+@media (max-width: 760px) {
+  .header-status-stack { width: 100%; }
+  .network-status { min-height: 28px; }
 }

@@ -86,3 +86,15 @@ Hotovost u sebe 3.6.22:
 - kontrola Hotovost u sebe se počítá proti hotovosti včetně výplaty řidiče
 - očekávaná hotovost u sebe = K odevzdání celkem + výplata řidiče
 - náklady a nehotovost zůstávají odečtené; dýško je jen přebytek nad očekávanou hotovost
+
+Celá hotovost 3.6.23:
+- pole přejmenováno na Celá hotovost u sebe, aby bylo jasné, že jde o hotovost před oddělením výplaty
+- nápověda vysvětluje zadání celé hotovosti u sebe
+- ve finální výčetce se dýško / chybějící hotovost ukáže jen při nenulovém rozdílu
+
+Audit balík 3.6.24:
+- doplněny testy pro celou hotovost u sebe, dýško a chybějící hotovost
+- přidána iOS nápověda pro instalaci přes Safari a stav Online/Offline
+- sdílení obrázku jasně rozlišuje skutečné sdílení a fallback stažení souboru
+- modal nastavení má lepší focus trap a validační chyby mají aria vazby
+- manifest doplněn o jazyk, kategorie, orientaci, shortcut a screenshoty pro širší PWA kompatibilitu

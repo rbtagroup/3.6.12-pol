@@ -49,7 +49,10 @@
     </div>
 
     <div class="header-actions-wrap">
-      <div id="headerStatus" class="header-status is-neutral"><span class="status-dot"></span><span id="headerStatusText">Připraveno k výpočtu</span></div>
+      <div class="header-status-stack">
+        <div id="headerStatus" class="header-status is-neutral"><span class="status-dot"></span><span id="headerStatusText">Připraveno k výpočtu</span></div>
+        <div id="networkStatus" class="network-status is-online"><span class="status-dot"></span><span>Online</span></div>
+      </div>
       <div class="header-actions">
         <button id="themeToggle" type="button" class="icon-button secondary" aria-label="Přepnout motiv"></button>
         <button id="settingsBtn" type="button" class="icon-button secondary" aria-label="Nastavení">
@@ -63,7 +66,8 @@
     <section id="pwaBanner" class="install-banner hidden">
       <div>
         <div class="install-title">Přidat aplikaci na plochu?</div>
-        <div class="install-text">Na mobilu a tabletu se bude spouštět rychleji a působí jako nativní appka.</div>
+        <div class="install-text" id="installText">Na mobilu a tabletu se bude spouštět rychleji a působí jako nativní appka.</div>
+        <div class="install-text install-ios-help hidden" id="pwaIosHelp">Na iPhonu otevři v Safari: Sdílet → Přidat na plochu.</div>
       </div>
       <button id="installPwaBtn" type="button" class="primary">Instalovat</button>
     </section>
@@ -158,13 +162,13 @@
           <label><span class="label-text"><svg class="icon"><use href="#icon-card"></use></svg> Kartou (Kč)</span><input type="number" id="kartou" min="0" step="1" inputmode="numeric" /></label>
           <label><span class="label-text"><svg class="icon"><use href="#icon-doc"></use></svg> Fakturou (Kč)</span><input type="number" id="fakturou" min="0" step="1" inputmode="numeric" /></label>
           <label><span class="label-text"><svg class="icon"><use href="#icon-doc"></use></svg> Jiné (Kč)</span><input type="number" id="jine" min="0" step="1" inputmode="numeric" /></label>
-          <label><span class="label-text"><svg class="icon"><use href="#icon-cash"></use></svg> Hotovost u sebe (Kč)</span><input type="number" id="cashActual" min="0" step="1" inputmode="numeric" aria-describedby="cashActualHelp" /><small id="cashActualHelp" class="field-hint">Volitelná kontrola hotovosti u sebe včetně výplaty řidiče, po odečtení nákladů a nehotovosti. Přebytek se zobrazí jako dýško.</small></label>
+          <label><span class="label-text"><svg class="icon"><use href="#icon-cash"></use></svg> Celá hotovost u sebe (Kč)</span><input type="number" id="cashActual" min="0" step="1" inputmode="numeric" aria-describedby="cashActualHelp" /><small id="cashActualHelp" class="field-hint">Zadej všechnu hotovost, kterou máš u sebe před oddělením výplaty. Přebytek se zobrazí jako dýško.</small></label>
         </div>
         <div class="cash-check-panel" id="cashCheckPanel">
-          <div class="status-meter cash-check" id="cashCheckStatus">Hotovost můžeš nechat prázdnou, kontrola se pak přeskočí.</div>
+          <div class="status-meter cash-check" id="cashCheckStatus">Celou hotovost můžeš nechat prázdnou, kontrola dýška se pak přeskočí.</div>
           <div class="cash-breakdown hidden" id="cashCheckBreakdown">
             <div><span>Má být u sebe</span><strong id="cashExpected">0 Kč</strong></div>
-            <div><span>U sebe</span><strong id="cashActualLive">0 Kč</strong></div>
+            <div><span>Celkem u sebe</span><strong id="cashActualLive">0 Kč</strong></div>
             <div><span>Dýško / rozdíl</span><strong id="cashDiffLive">0 Kč</strong></div>
           </div>
         </div>
@@ -246,7 +250,7 @@
     </section>
   </main>
 
-  <div id="settingsModal" class="hidden modal-overlay" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+  <div id="settingsModal" class="hidden modal-overlay" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" aria-hidden="true">
     <div class="modal-content">
       <div class="modal-badge">Parametry výpočtu</div>
       <h2 id="settingsTitle">Nastavení výpočtu</h2>

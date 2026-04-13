@@ -25,6 +25,8 @@ const baseValues = {
   kartou: 0,
   fakturou: 0,
   jine: 0,
+  cashActual: 0,
+  hasCashActual: false,
   iacCount: 0,
   shkmCount: 0,
 };
@@ -54,6 +56,8 @@ function computeMetrics(overrides, config = DEFAULT_CONFIG) {
   const delta = values.trzba - minTrzba;
   const kOdevzdani = values.trzba - values.palivo - values.myti - values.kartou - values.fakturou - values.jine - vyplata;
   const settlement = kOdevzdani + doplatek;
+  const cashExpected = settlement + vyplata;
+  const cashDiff = values.hasCashActual ? values.cashActual - cashExpected : 0;
 
   return {
     ...values,
@@ -70,6 +74,8 @@ function computeMetrics(overrides, config = DEFAULT_CONFIG) {
     delta,
     kOdevzdani,
     settlement,
+    cashExpected,
+    cashDiff,
   };
 }
 
@@ -128,5 +134,33 @@ runCase("nulovy fix zustava platny", { trzba: 2000 }, {
   vyplata: 600,
   kOdevzdani: 1400,
 }, { commRate: 30, baseFull: 0, baseHalf: 0 });
+
+runCase("cela hotovost sedi pred vyplatou", { trzba: 3000, cashActual: 3000, hasCashActual: true }, {
+  kOdevzdani: 2000,
+  settlement: 2000,
+  vyplata: 1000,
+  cashExpected: 3000,
+  cashDiff: 0,
+});
+
+runCase("cela hotovost ukaze dysko", { trzba: 3000, cashActual: 3150, hasCashActual: true }, {
+  cashExpected: 3000,
+  cashDiff: 150,
+  settlement: 2000,
+});
+
+runCase("cela hotovost ukaze chybejici hotovost", { trzba: 3000, cashActual: 2850, hasCashActual: true }, {
+  cashExpected: 3000,
+  cashDiff: -150,
+  settlement: 2000,
+});
+
+runCase("cela hotovost respektuje nehotovost a naklady", { trzba: 5000, kartou: 1000, fakturou: 500, palivo: 700, myti: 100, jine: 200, cashActual: 2500, hasCashActual: true }, {
+  vyplata: 1500,
+  kOdevzdani: 1000,
+  settlement: 1000,
+  cashExpected: 2500,
+  cashDiff: 0,
+});
 
 console.log("Vypocetni self-testy prosly.");

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rb-taxi-vycetka-v3-6-22-cash-before-payout';
+const CACHE_NAME = 'rb-taxi-vycetka-v3-6-24-platform-audit';
 const APP_SHELL = [
   './',
   './index.html',
@@ -9,7 +9,9 @@ const APP_SHELL = [
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
-  './apple-touch-icon.png'
+  './apple-touch-icon.png',
+  './screenshot-wide.png',
+  './screenshot-mobile.png'
 ];
 
 self.addEventListener('install', (event) => {

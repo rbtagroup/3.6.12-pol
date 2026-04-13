@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const VERSION = "3.6.22-cash-before-payout";
+  const VERSION = "3.6.24-platform-audit";
   const CONFIG_KEYS = {
     commRate: "rb_commRate",
     baseFull: "rb_baseFull",
@@ -54,6 +54,9 @@ document.addEventListener("DOMContentLoaded", () => {
     kmReal: document.getElementById("kmReal"),
     headerStatus: document.getElementById("headerStatus"),
     headerStatusText: document.getElementById("headerStatusText"),
+    networkStatus: document.getElementById("networkStatus"),
+    installText: document.getElementById("installText"),
+    pwaIosHelp: document.getElementById("pwaIosHelp"),
     liveUctovane: document.getElementById("liveUctovane"),
     liveSmluvni: document.getElementById("liveSmluvni"),
     liveNetto: document.getElementById("liveNetto"),
@@ -101,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
     kartou: "Kartou",
     fakturou: "Fakturou",
     jine: "Jiné",
-    cashActual: "Hotovost u sebe",
+    cashActual: "Celá hotovost u sebe",
     iacCount: "IAC",
     shkmCount: "SHKM",
   };
@@ -363,7 +366,16 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function clearErrors() {
-    document.querySelectorAll(".input-error").forEach((field) => field.classList.remove("input-error"));
+    document.querySelectorAll(".input-error").forEach((field) => {
+      field.classList.remove("input-error");
+      field.removeAttribute("aria-invalid");
+      const describedBy = (field.getAttribute("aria-describedby") || "")
+        .split(/\s+/)
+        .filter((id) => id && !id.endsWith("Error"))
+        .join(" ");
+      if (describedBy) field.setAttribute("aria-describedby", describedBy);
+      else field.removeAttribute("aria-describedby");
+    });
     document.querySelectorAll(".field-error-text").forEach((message) => message.remove());
   }
 
@@ -371,11 +383,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const field = document.getElementById(id);
     if (!field) return;
     field.classList.add("input-error");
+    field.setAttribute("aria-invalid", "true");
     if (!message) return;
 
     const error = document.createElement("small");
+    error.id = `${id}Error`;
     error.className = "field-error-text";
     error.textContent = message;
+    const describedBy = new Set((field.getAttribute("aria-describedby") || "").split(/\s+/).filter(Boolean));
+    describedBy.add(error.id);
+    field.setAttribute("aria-describedby", [...describedBy].join(" "));
     field.insertAdjacentElement("afterend", error);
   }
 
@@ -561,7 +578,7 @@ document.addEventListener("DOMContentLoaded", () => {
     el.cashCheckBreakdown?.classList.toggle("hidden", !metrics.hasCashActual);
 
     if (!metrics.hasCashActual) {
-      el.cashCheckStatus.textContent = "Hotovost můžeš nechat prázdnou, kontrola se pak přeskočí.";
+      el.cashCheckStatus.textContent = "Celou hotovost můžeš nechat prázdnou, kontrola dýška se pak přeskočí.";
       return;
     }
 
@@ -571,7 +588,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (metrics.cashDiff === 0) {
       el.cashCheckStatus.classList.add("is-good");
-      el.cashCheckStatus.textContent = "Hotovost sedí na očekávanou hotovost u sebe včetně výplaty.";
+      el.cashCheckStatus.textContent = "Celá hotovost sedí na očekávanou částku před oddělením výplaty.";
       return;
     }
 
@@ -644,8 +661,8 @@ document.addEventListener("DOMContentLoaded", () => {
       row("Nehotovost celkem", formatMoney(metrics.nonCash), { icon: "icon-card", show: metrics.nonCash > 0 }),
       row("K odevzdání (hotovost)", formatMoney(metrics.kOdevzdani), { className: "accent-odev", icon: null }),
       row("Má být u sebe (vč. výplaty)", formatMoney(metrics.cashExpected), { icon: "icon-cash", show: metrics.hasCashActual }),
-      row("Hotovost u sebe", formatMoney(metrics.cashActual), { icon: "icon-cash", show: metrics.hasCashActual }),
-      row(getCashDiffLabel(metrics), formatCashDiff(metrics), { className: getCashDiffClass(metrics), icon: null, show: metrics.hasCashActual }),
+      row("Celá hotovost u sebe", formatMoney(metrics.cashActual), { icon: "icon-cash", show: metrics.hasCashActual }),
+      row(getCashDiffLabel(metrics), formatCashDiff(metrics), { className: getCashDiffClass(metrics), icon: null, show: metrics.hasCashActual && metrics.cashDiff !== 0 }),
       row("Výplata řidiče", formatMoney(metrics.vyplata), { className: "accent-pay", icon: null }),
       row("Doplatek řidiče na minimum", formatMoney(metrics.doplatek), { className: "accent-doplatek", icon: null, show: metrics.nedoplatek }),
       row("K odevzdání celkem", formatMoney(metrics.settlement), { className: "accent-grand", icon: null }),
@@ -780,7 +797,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ${metaItem("Režim výplaty", safePayoutMode)}
           ${metaItem("Nehotovost", formatMoney(metrics.nonCash))}
           ${metrics.hasCashActual ? metaItem("Má být u sebe", formatMoney(metrics.cashExpected)) : ""}
-          ${metrics.hasCashActual ? metaItem(getCashDiffLabel(metrics), formatCashDiff(metrics)) : ""}
+          ${metrics.hasCashActual && metrics.cashDiff !== 0 ? metaItem(getCashDiffLabel(metrics), formatCashDiff(metrics)) : ""}
         </div>
 
         <div class="share-note">
@@ -933,10 +950,11 @@ document.addEventListener("DOMContentLoaded", () => {
         title: "Výčetka",
         text: "RB TAXI – Výčetka řidiče",
       });
-      return;
+      return { shared: true, downloaded: false };
     }
 
     triggerBlobDownload(blob, filename);
+    return { shared: false, downloaded: true };
   }
 
   async function exportPdf() {
@@ -1017,21 +1035,29 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function initSettings() {
+    const getModalFocusables = () => Array.from(el.settingsModal?.querySelectorAll(
+      'button, input, select, textarea, a[href], [tabindex]:not([tabindex="-1"])'
+    ) || []).filter((node) => !node.disabled && node.offsetParent !== null);
+
     const closeSettings = () => {
       el.settingsModal?.classList.add("hidden");
+      el.settingsModal?.setAttribute("aria-hidden", "true");
       lastFocusedBeforeSettings?.focus?.();
       lastFocusedBeforeSettings = null;
     };
 
-    el.settingsBtn?.addEventListener("click", () => {
+    const openSettings = () => {
       const config = getConfig();
       lastFocusedBeforeSettings = document.activeElement;
       if (el.setComm) el.setComm.value = String(config.commRate);
       if (el.setFull) el.setFull.value = String(config.baseFull);
       if (el.setHalf) el.setHalf.value = String(config.baseHalf);
       el.settingsModal?.classList.remove("hidden");
+      el.settingsModal?.setAttribute("aria-hidden", "false");
       el.setComm?.focus();
-    });
+    };
+
+    el.settingsBtn?.addEventListener("click", openSettings);
 
     el.closeSettingsBtn?.addEventListener("click", () => {
       closeSettings();
@@ -1073,9 +1099,7 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem(CONFIG_KEYS.commRate, String(commRate));
       localStorage.setItem(CONFIG_KEYS.baseFull, String(baseFull));
       localStorage.setItem(CONFIG_KEYS.baseHalf, String(baseHalf));
-      el.settingsModal?.classList.add("hidden");
-      lastFocusedBeforeSettings?.focus?.();
-      lastFocusedBeforeSettings = null;
+      closeSettings();
       markReportDirty();
       updateHeroConfig();
       updateLivePreview();
@@ -1089,14 +1113,45 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && !el.settingsModal?.classList.contains("hidden")) {
+      if (el.settingsModal?.classList.contains("hidden")) return;
+      if (event.key === "Escape") {
         closeSettings();
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const focusables = getModalFocusables();
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
       }
     });
   }
 
+  function isIosLike() {
+    return /iphone|ipad|ipod/i.test(navigator.userAgent)
+      || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  }
+
+  function isStandalonePwa() {
+    return window.matchMedia?.("(display-mode: standalone)")?.matches || window.navigator.standalone === true;
+  }
+
   function initPwaPrompt() {
     if (window.location.protocol === "file:") return;
+
+    const iosInstallHelp = isIosLike() && !isStandalonePwa();
+    if (iosInstallHelp) {
+      if (el.installText) el.installText.textContent = "Na iPhonu/iPadu se aplikace přidává přes Safari.";
+      el.pwaIosHelp?.classList.remove("hidden");
+      if (el.installPwaBtn) el.installPwaBtn.textContent = "Jak přidat";
+      el.pwaBanner?.classList.remove("hidden");
+    }
 
     window.addEventListener("beforeinstallprompt", (event) => {
       event.preventDefault();
@@ -1110,12 +1165,32 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     el.installPwaBtn?.addEventListener("click", async () => {
-      if (!deferredPrompt) return;
+      if (!deferredPrompt) {
+        showNotice("Na iPhonu otevři aplikaci v Safari, klepni na Sdílet a zvol Přidat na plochu.", "neutral");
+        return;
+      }
       el.pwaBanner?.classList.add("hidden");
       deferredPrompt.prompt();
       await deferredPrompt.userChoice;
       deferredPrompt = null;
     });
+  }
+
+  function initConnectivity() {
+    if (!el.networkStatus) return;
+    const update = (announce = false) => {
+      const online = navigator.onLine !== false;
+      el.networkStatus.classList.toggle("is-online", online);
+      el.networkStatus.classList.toggle("is-offline", !online);
+      const text = el.networkStatus.querySelector("span:last-child");
+      if (text) text.textContent = online ? "Online" : "Offline";
+      if (announce) {
+        showNotice(online ? "Aplikace je zpět online." : "Aplikace je offline. Výpočet funguje, export může být omezený.", online ? "good" : "bad");
+      }
+    };
+    update(false);
+    window.addEventListener("online", () => update(true));
+    window.addEventListener("offline", () => update(true));
   }
 
   function registerServiceWorker() {
@@ -1208,8 +1283,10 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         el.shareImgBtn.disabled = true;
         showNotice("Připravuji obrázek výčetky...", "neutral");
-        await shareReportImage();
-        showNotice("Obrázek výčetky je připravený.", "good");
+        const result = await shareReportImage();
+        showNotice(result.downloaded
+          ? "Sdílení souboru není na tomto zařízení dostupné. Obrázek výčetky se stáhl."
+          : "Výčetka byla předaná do sdílení.", "good");
       } catch (error) {
         if (error?.name === "AbortError") return;
         showNotice(`Sdílení obrázku selhalo: ${error.message || error}`, "bad");
@@ -1223,7 +1300,7 @@ document.addEventListener("DOMContentLoaded", () => {
         el.pdfBtn.disabled = true;
         showNotice("Připravuji PDF výčetky...", "neutral");
         await exportPdf();
-        showNotice("PDF výčetky je připravené.", "good");
+        showNotice("PDF výčetky se stáhlo do zařízení.", "good");
       } catch (error) {
         showNotice(`Export do PDF selhal: ${error.message || error}`, "bad");
       } finally {
@@ -1235,6 +1312,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initTheme();
   initSettings();
   initPwaPrompt();
+  initConnectivity();
   registerServiceWorker();
   if (el.appVersion) el.appVersion.textContent = `Verze ${VERSION}`;
   updateHeroConfig();
