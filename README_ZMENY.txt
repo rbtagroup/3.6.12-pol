@@ -112,3 +112,9 @@ Cache refresh 3.6.26:
 - přidána verze do URL hlavních CSS/JS/vendor souborů, aby mobil nenačítal starou kopii
 - service worker pro HTML, CSS, JS, manifest a exportní knihovny používá network-first strategii
 - doplněny no-cache meta tagy v HTML jako pojistka pro mobilní prohlížeče
+
+
+iOS stability 3.6.27:
+- přidáno větší odsazení obsahu od krajů na mobilu a respektování safe-area
+- inputy/selecty mají na mobilu 16px kvůli omezení iOS zoomování při fokusu
+- doplněna ochrana proti vodorovnému „plavání“ layoutu na iOS

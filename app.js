@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const VERSION = "3.6.26-cache-refresh";
+  const VERSION = "3.6.27-ios-stability";
   const CONFIG_KEYS = {
     commRate: "rb_commRate",
     baseFull: "rb_baseFull",

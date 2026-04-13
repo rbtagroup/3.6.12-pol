@@ -1882,3 +1882,69 @@ body.light-mode .action-stack .quiet-action { background: #f8fafc; }
   .eyebrow { font-size: 9px; }
   #output .summary-grid { grid-template-columns: 1fr 1fr; }
 }
+
+
+/* iOS stability 3.6.27 */
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overscroll-behavior-x: none;
+}
+body {
+  touch-action: pan-y;
+}
+main,
+.app-header,
+.install-banner,
+.glass-shell,
+#output,
+.action-stack,
+.bottom-dashboard {
+  max-width: 100%;
+}
+@supports (-webkit-touch-callout: none) {
+  body {
+    -webkit-text-size-adjust: 100%;
+  }
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+@media (max-width: 760px) {
+  main {
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+  .app-header {
+    padding-left: max(14px, env(safe-area-inset-left));
+    padding-right: max(14px, env(safe-area-inset-right));
+  }
+  .glass-shell,
+  #output,
+  .action-stack,
+  .bottom-dashboard,
+  .install-banner,
+  .app-notice {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  input,
+  select {
+    font-size: 16px;
+  }
+}
+@media (max-width: 430px) {
+  main {
+    padding-left: max(14px, env(safe-area-inset-left));
+    padding-right: max(14px, env(safe-area-inset-right));
+  }
+  .glass-shell,
+  #output {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}
