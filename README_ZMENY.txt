@@ -118,3 +118,8 @@ iOS stability 3.6.27:
 - přidáno větší odsazení obsahu od krajů na mobilu a respektování safe-area
 - inputy/selecty mají na mobilu 16px kvůli omezení iOS zoomování při fokusu
 - doplněna ochrana proti vodorovnému „plavání“ layoutu na iOS
+
+
+No edge slider 3.6.28:
+- odstraněny záporné mobilní okraje u spodních akčních lišt, aby nic neutíkalo doprava
+- skryty systémové scrollbary aplikace, pokud je prohlížeč vykreslí na hraně obsahu

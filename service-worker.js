@@ -1,4 +1,4 @@
-const CACHE_NAME = "rb-taxi-vycetka-v3-6-27-ios-stability";
+const CACHE_NAME = "rb-taxi-vycetka-v3-6-28-no-edge-slider";
 const APP_SHELL = [
   "./",
   "./index.html",

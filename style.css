@@ -1948,3 +1948,30 @@ main,
     padding-right: 14px;
   }
 }
+
+
+/* No edge slider 3.6.28 */
+html,
+body,
+main {
+  scrollbar-width: none;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+main::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+@media (max-width: 760px) {
+  .form-actions,
+  .action-stack {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    left: auto;
+    right: auto;
+  }
+  .action-stack {
+    overflow: hidden;
+  }
+}
