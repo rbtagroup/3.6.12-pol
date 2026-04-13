@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const VERSION = "3.6.12-compact-polish";
+  const VERSION = "3.6.13-export-loader";
   const CONFIG_KEYS = {
     commRate: "rb_commRate",
     baseFull: "rb_baseFull",
@@ -96,6 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let lastRenderedData = null;
   let isCalculated = false;
   let lastFocusedBeforeSettings = null;
+  const libraryLoaders = {};
 
   function getText(id) {
     return document.getElementById(id)?.value?.trim() || "";
@@ -170,10 +171,47 @@ document.addEventListener("DOMContentLoaded", () => {
     el.appNotice?.classList.add("hidden");
   }
 
-  async function captureElementCanvas(node, scale = Math.max(2, Math.floor(window.devicePixelRatio || 2)), backgroundColor = null) {
-    if (typeof window.html2canvas !== "function") {
-      throw new Error("Knihovna pro vytvoření obrázku není načtená.");
+  function loadScriptOnce(globalName, localSrc, fallbackSrc) {
+    if (window[globalName]) return Promise.resolve();
+    if (libraryLoaders[globalName]) return libraryLoaders[globalName];
+
+    const loadFrom = (src) => new Promise((resolve, reject) => {
+      const existing = document.querySelector(`script[data-dynamic-lib="${globalName}"][src="${src}"]`);
+      if (existing) {
+        existing.addEventListener("load", resolve, { once: true });
+        existing.addEventListener("error", reject, { once: true });
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = src;
+      script.async = false;
+      script.dataset.dynamicLib = globalName;
+      script.onload = resolve;
+      script.onerror = () => reject(new Error(`Nepodařilo se načíst ${src}`));
+      document.head.appendChild(script);
+    });
+
+    const localUrl = new URL(localSrc, document.baseURI).href;
+    libraryLoaders[globalName] = loadFrom(localUrl)
+      .catch(() => (fallbackSrc ? loadFrom(fallbackSrc) : Promise.reject()))
+      .then(() => {
+        if (!window[globalName]) throw new Error(`Knihovna ${globalName} se načetla, ale není dostupná.`);
+      });
+
+    return libraryLoaders[globalName];
+  }
+
+  async function ensureExportLibraries(needsPdf = false) {
+    await loadScriptOnce("html2canvas", "vendor/html2canvas.min.js", "https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
+    if (needsPdf) {
+      await loadScriptOnce("jspdf", "vendor/jspdf.umd.min.js", "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+      if (!window.jspdf?.jsPDF) throw new Error("Knihovna pro PDF není dostupná.");
     }
+  }
+
+  async function captureElementCanvas(node, scale = Math.max(2, Math.floor(window.devicePixelRatio || 2)), backgroundColor = null) {
+    await ensureExportLibraries(false);
 
     await nextFrame();
 
@@ -722,9 +760,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function exportPdf() {
-    if (!window.jspdf?.jsPDF) {
-      throw new Error("Knihovna pro PDF není načtená.");
-    }
+    await ensureExportLibraries(true);
 
     const { canvas } = await buildReportImageFile("share");
     const img = canvas.toDataURL("image/png");
