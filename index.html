@@ -68,7 +68,7 @@
       <button id="installPwaBtn" type="button" class="primary">Instalovat</button>
     </section>
 
-    <div id="appNotice" class="app-notice hidden" role="status" aria-live="polite"></div>
+    <div id="appNotice" class="app-notice hidden" role="status" aria-live="polite"><span id="appNoticeText"></span><button id="appNoticeAction" type="button" class="notice-action hidden"></button></div>
 
     <section class="glass-shell">
       <div class="shell-topbar compact">
@@ -158,7 +158,9 @@
           <label><span class="label-text"><svg class="icon"><use href="#icon-card"></use></svg> Kartou (Kč)</span><input type="number" id="kartou" min="0" step="1" inputmode="numeric" /></label>
           <label><span class="label-text"><svg class="icon"><use href="#icon-doc"></use></svg> Fakturou (Kč)</span><input type="number" id="fakturou" min="0" step="1" inputmode="numeric" /></label>
           <label><span class="label-text"><svg class="icon"><use href="#icon-doc"></use></svg> Jiné (Kč)</span><input type="number" id="jine" min="0" step="1" inputmode="numeric" /></label>
+          <label><span class="label-text"><svg class="icon"><use href="#icon-cash"></use></svg> Hotovost u sebe (Kč)</span><input type="number" id="cashActual" min="0" step="1" inputmode="numeric" aria-describedby="cashActualHelp" /><small id="cashActualHelp" class="field-hint">Volitelná kontrola proti částce k odevzdání.</small></label>
         </div>
+        <div class="status-meter cash-check" id="cashCheckStatus">Hotovost můžeš nechat prázdnou, kontrola se pak přeskočí.</div>
 
         <div class="section-heading">Smluvní jízdy</div>
         <div class="form-grid form-grid-2">
@@ -256,6 +258,10 @@
       <div class="modal-actions">
         <button id="saveSettingsBtn" class="primary" type="button">Uložit</button>
         <button id="closeSettingsBtn" class="secondary" type="button">Zavřít</button>
+      </div>
+      <div class="modal-actions modal-actions-tools">
+        <button id="exportSelfTestBtn" class="secondary" type="button">Otestovat export</button>
+        <button id="resetAppBtn" class="secondary danger-button" type="button">Načíst nejnovější verzi</button>
       </div>
     </div>
   </div>

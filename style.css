@@ -310,6 +310,10 @@ select:focus {
 }
 
 .app-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   margin-bottom: 14px;
   padding: 11px 13px;
   border-radius: var(--radius-md);
@@ -331,6 +335,23 @@ select:focus {
   background: rgba(255,107,107,0.10);
   color: #ffd8d8;
 }
+.notice-action {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid currentColor;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: inherit;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.cash-check { margin-top: 12px; }
+.danger-button {
+  border-color: rgba(255,107,107,0.35) !important;
+  color: #ffd8d8 !important;
+}
+body.light-mode .danger-button { color: #b42318 !important; }
+.modal-actions-tools { margin-top: 10px; }
 
 .live-strip,
 .kpi-strip,

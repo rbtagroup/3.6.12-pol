@@ -29,3 +29,11 @@ Vzhled 3.6.12:
 - zjemněné stíny a snížená výška spodního dashboardu
 - mobilní ovládání ponecháno nad cca 44 px pro pohodlné klepnutí
 - v hlavičce aplikace se zobrazuje aktuální verze
+
+
+Provozní nástroje 3.6.14:
+- exportní knihovny se před PDF/sdílením umí samy dočíst z vendor/ a případně z CDN fallbacku
+- v nastavení je tlačítko Otestovat export
+- v nastavení je tlačítko Načíst nejnovější verzi, které vymaže aplikační cache a obnoví stránku
+- aplikace hlásí dostupnou novou verzi service workeru a nabídne její načtení
+- přidána volitelná kontrola Hotovost u sebe proti částce k odevzdání

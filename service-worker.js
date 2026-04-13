@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rb-taxi-vycetka-v3-6-13-export-loader';
+const CACHE_NAME = 'rb-taxi-vycetka-v3-6-14-ops-tools';
 const APP_SHELL = [
   './',
   './index.html',

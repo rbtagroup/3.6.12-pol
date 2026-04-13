@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const VERSION = "3.6.13-export-loader";
+  const VERSION = "3.6.14-ops-tools";
   const CONFIG_KEYS = {
     commRate: "rb_commRate",
     baseFull: "rb_baseFull",
@@ -46,6 +46,8 @@ document.addEventListener("DOMContentLoaded", () => {
     pwaBanner: document.getElementById("pwaBanner"),
     installPwaBtn: document.getElementById("installPwaBtn"),
     appNotice: document.getElementById("appNotice"),
+    appNoticeText: document.getElementById("appNoticeText"),
+    appNoticeAction: document.getElementById("appNoticeAction"),
     appVersion: document.getElementById("appVersion"),
     kmReal: document.getElementById("kmReal"),
     headerStatus: document.getElementById("headerStatus"),
@@ -69,16 +71,19 @@ document.addEventListener("DOMContentLoaded", () => {
     liveCosts: document.getElementById("liveCosts"),
     liveDesk: document.getElementById("liveDesk"),
     liveSettlement: document.getElementById("liveCelkem"),
+    cashCheckStatus: document.getElementById("cashCheckStatus"),
     setComm: document.getElementById("setComm"),
     setFull: document.getElementById("setFull"),
     setHalf: document.getElementById("setHalf"),
     saveSettingsBtn: document.getElementById("saveSettingsBtn"),
     closeSettingsBtn: document.getElementById("closeSettingsBtn"),
+    exportSelfTestBtn: document.getElementById("exportSelfTestBtn"),
+    resetAppBtn: document.getElementById("resetAppBtn"),
   };
 
   const FIELD_IDS = [
     "driverName", "shiftType", "rz", "kmStart", "kmEnd", "trzba", "pristavne",
-    "palivo", "myti", "kartou", "fakturou", "jine", "iacCount", "shkmCount",
+    "palivo", "myti", "kartou", "fakturou", "jine", "cashActual", "iacCount", "shkmCount",
   ];
 
   const FRIENDLY_NAMES = {
@@ -88,6 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
     kartou: "Kartou",
     fakturou: "Fakturou",
     jine: "Jiné",
+    cashActual: "Hotovost u sebe",
     iacCount: "IAC",
     shkmCount: "SHKM",
   };
@@ -159,16 +165,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 1000);
   }
 
-  function showNotice(message, tone = "neutral") {
+  function showNotice(message, tone = "neutral", action = null) {
     if (!el.appNotice) return;
-    el.appNotice.textContent = message;
+    if (el.appNoticeText) {
+      el.appNoticeText.textContent = message;
+    } else {
+      el.appNotice.textContent = message;
+    }
     el.appNotice.classList.remove("hidden", "is-good", "is-bad");
     if (tone === "good") el.appNotice.classList.add("is-good");
     if (tone === "bad") el.appNotice.classList.add("is-bad");
+
+    if (el.appNoticeAction) {
+      el.appNoticeAction.classList.toggle("hidden", !action);
+      el.appNoticeAction.textContent = action?.label || "";
+      el.appNoticeAction.onclick = action?.onClick || null;
+    }
   }
 
   function clearNotice() {
     el.appNotice?.classList.add("hidden");
+    if (el.appNoticeAction) el.appNoticeAction.onclick = null;
   }
 
   function loadScriptOnce(globalName, localSrc, fallbackSrc) {
@@ -262,6 +279,8 @@ document.addEventListener("DOMContentLoaded", () => {
       kartou: getNumber("kartou"),
       fakturou: getNumber("fakturou"),
       jine: getNumber("jine"),
+      cashActual: getNumber("cashActual"),
+      hasCashActual: getText("cashActual") !== "",
       iacCount: getNumber("iacCount"),
       shkmCount: getNumber("shkmCount"),
     };
@@ -287,6 +306,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const delta = values.trzba - minTrzba;
     const kOdevzdani = values.trzba - values.palivo - values.myti - values.kartou - values.fakturou - values.jine - vyplata;
     const settlement = kOdevzdani + doplatek;
+    const cashDiff = values.hasCashActual ? values.cashActual - settlement : 0;
 
     return {
       ...values,
@@ -309,6 +329,7 @@ document.addEventListener("DOMContentLoaded", () => {
       delta,
       kOdevzdani,
       settlement,
+      cashDiff,
       nedoplatek: doplatek > 0,
     };
   }
@@ -349,7 +370,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return "Tržba musí být větší než 0.";
     }
 
-    for (const id of ["pristavne", "palivo", "myti", "kartou", "fakturou", "jine", "iacCount", "shkmCount"]) {
+    for (const id of ["pristavne", "palivo", "myti", "kartou", "fakturou", "jine", "cashActual", "iacCount", "shkmCount"]) {
       if (values[id] < 0) {
         setFieldError(id);
         return `${FRIENDLY_NAMES[id]} nesmí být záporné.`;
@@ -467,6 +488,27 @@ document.addEventListener("DOMContentLoaded", () => {
     setCommandCardTone("status-bad");
   }
 
+  function updateCashCheck(metrics) {
+    if (!el.cashCheckStatus) return;
+    el.cashCheckStatus.classList.remove("is-good", "is-bad");
+
+    if (!metrics.hasCashActual) {
+      el.cashCheckStatus.textContent = "Hotovost můžeš nechat prázdnou, kontrola se pak přeskočí.";
+      return;
+    }
+
+    if (metrics.cashDiff === 0) {
+      el.cashCheckStatus.classList.add("is-good");
+      el.cashCheckStatus.textContent = "Hotovost sedí přesně na částku k odevzdání.";
+      return;
+    }
+
+    el.cashCheckStatus.classList.add("is-bad");
+    el.cashCheckStatus.textContent = metrics.cashDiff > 0
+      ? `Hotovost je vyšší o ${formatMoney(metrics.cashDiff)}.`
+      : `Hotovost chybí o ${formatMoney(Math.abs(metrics.cashDiff))}.`;
+  }
+
   function updateLivePreview() {
     syncKm();
     const metrics = computeMetrics(readFormValues());
@@ -481,6 +523,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (el.liveCosts) el.liveCosts.textContent = formatMoney(metrics.costs);
     if (el.liveDesk) el.liveDesk.textContent = formatMoney(metrics.kOdevzdani);
     if (el.liveSettlement) el.liveSettlement.textContent = formatMoney(metrics.settlement);
+    updateCashCheck(metrics);
 
     updateStatus(metrics);
   }
@@ -524,6 +567,8 @@ document.addEventListener("DOMContentLoaded", () => {
       row("Jiné", formatMoney(metrics.jine), { icon: "icon-doc", show: metrics.jine > 0 }),
       row("Nehotovost celkem", formatMoney(metrics.nonCash), { icon: "icon-card", show: metrics.nonCash > 0 }),
       row("K odevzdání (hotovost)", formatMoney(metrics.kOdevzdani), { className: "accent-odev", icon: null }),
+      row("Hotovost u sebe", formatMoney(metrics.cashActual), { icon: "icon-cash", show: metrics.hasCashActual }),
+      row("Rozdíl hotovosti", formatMoney(metrics.cashDiff), { className: metrics.cashDiff === 0 ? "accent-pay" : "accent-doplatek", icon: null, show: metrics.hasCashActual }),
       row("Výplata řidiče", formatMoney(metrics.vyplata), { className: "accent-pay", icon: null }),
       row("Doplatek řidiče na minimum", formatMoney(metrics.doplatek), { className: "accent-doplatek", icon: null, show: metrics.nedoplatek }),
       row("K odevzdání celkem", formatMoney(metrics.settlement), { className: "accent-grand", icon: null }),
@@ -657,6 +702,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ${metaItem("Najeté km", formatNumber(metrics.kmReal))}
           ${metaItem("Režim výplaty", safePayoutMode)}
           ${metaItem("Nehotovost", formatMoney(metrics.nonCash))}
+          ${metrics.hasCashActual ? metaItem("Rozdíl hotovosti", formatMoney(metrics.cashDiff)) : ""}
         </div>
 
         <div class="share-note">
@@ -797,6 +843,44 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  async function runExportSelfTest() {
+    await ensureExportLibraries(true);
+
+    const node = document.createElement("div");
+    node.style.cssText = "position:fixed;left:-10000px;top:0;width:240px;padding:12px;background:#fff;color:#111;font-family:Arial,sans-serif";
+    node.textContent = "RB TAXI export test";
+    document.body.appendChild(node);
+
+    try {
+      const canvas = await captureElementCanvas(node, 1, "#ffffff");
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({ orientation: "portrait", unit: "pt", format: "a4" });
+      pdf.addImage(canvas.toDataURL("image/png"), "PNG", 20, 20, 200, 80);
+      const pdfBlob = pdf.output("blob");
+      if (!canvas.width || !canvas.height || pdfBlob.size < 1000) {
+        throw new Error("Exportní test nevytvořil platný obrázek nebo PDF.");
+      }
+    } finally {
+      node.remove();
+    }
+  }
+
+  async function resetAppCachesAndReload() {
+    if (!confirm("Načíst nejnovější verzi aplikace? Vymaže se jen aplikační cache, uložené nastavení výpočtu zůstane.")) return;
+
+    if ("serviceWorker" in navigator) {
+      const registrations = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(registrations.map((registration) => registration.unregister()));
+    }
+
+    if ("caches" in window) {
+      const keys = await caches.keys();
+      await Promise.all(keys.map((key) => caches.delete(key)));
+    }
+
+    window.location.reload();
+  }
+
   function initSettings() {
     const closeSettings = () => {
       el.settingsModal?.classList.add("hidden");
@@ -816,6 +900,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
     el.closeSettingsBtn?.addEventListener("click", () => {
       closeSettings();
+    });
+
+    el.exportSelfTestBtn?.addEventListener("click", async () => {
+      try {
+        el.exportSelfTestBtn.disabled = true;
+        showNotice("Testuji exportní knihovny...", "neutral");
+        await runExportSelfTest();
+        showNotice("Export je připravený. Obrázek i PDF knihovna fungují.", "good");
+      } catch (error) {
+        showNotice(`Exportní test selhal: ${error.message || error}`, "bad");
+      } finally {
+        el.exportSelfTestBtn.disabled = false;
+      }
+    });
+
+    el.resetAppBtn?.addEventListener("click", async () => {
+      try {
+        el.resetAppBtn.disabled = true;
+        await resetAppCachesAndReload();
+      } catch (error) {
+        el.resetAppBtn.disabled = false;
+        showNotice(`Načtení nejnovější verze selhalo: ${error.message || error}`, "bad");
+      }
     });
 
     el.saveSettingsBtn?.addEventListener("click", () => {
@@ -885,7 +992,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.addEventListener("load", async () => {
       try {
-        await navigator.serviceWorker.register("./service-worker.js");
+        const registration = await navigator.serviceWorker.register("./service-worker.js");
+        registration.addEventListener("updatefound", () => {
+          const worker = registration.installing;
+          if (!worker) return;
+          worker.addEventListener("statechange", () => {
+            if (worker.state === "installed" && navigator.serviceWorker.controller) {
+              showNotice("Je dostupná nová verze aplikace.", "neutral", {
+                label: "Načíst",
+                onClick: resetAppCachesAndReload,
+              });
+            }
+          });
+        });
+        await registration.update();
       } catch (error) {
         console.error("Service worker registration failed:", error);
       }
