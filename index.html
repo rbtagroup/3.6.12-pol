@@ -70,7 +70,7 @@
 
     <div id="appNotice" class="app-notice hidden" role="status" aria-live="polite"><span id="appNoticeText"></span><button id="appNoticeAction" type="button" class="notice-action hidden"></button></div>
 
-    <section class="glass-shell">
+    <section id="calcShell" class="glass-shell">
       <div class="shell-topbar compact">
         <div>
           <div class="shell-title">Výpočet směny</div>
@@ -160,7 +160,14 @@
           <label><span class="label-text"><svg class="icon"><use href="#icon-doc"></use></svg> Jiné (Kč)</span><input type="number" id="jine" min="0" step="1" inputmode="numeric" /></label>
           <label><span class="label-text"><svg class="icon"><use href="#icon-cash"></use></svg> Hotovost u sebe (Kč)</span><input type="number" id="cashActual" min="0" step="1" inputmode="numeric" aria-describedby="cashActualHelp" /><small id="cashActualHelp" class="field-hint">Volitelná kontrola proti částce k odevzdání.</small></label>
         </div>
-        <div class="status-meter cash-check" id="cashCheckStatus">Hotovost můžeš nechat prázdnou, kontrola se pak přeskočí.</div>
+        <div class="cash-check-panel" id="cashCheckPanel">
+          <div class="status-meter cash-check" id="cashCheckStatus">Hotovost můžeš nechat prázdnou, kontrola se pak přeskočí.</div>
+          <div class="cash-breakdown hidden" id="cashCheckBreakdown">
+            <div><span>Má být</span><strong id="cashExpected">0 Kč</strong></div>
+            <div><span>U sebe</span><strong id="cashActualLive">0 Kč</strong></div>
+            <div><span>Rozdíl</span><strong id="cashDiffLive">0 Kč</strong></div>
+          </div>
+        </div>
 
         <div class="section-heading">Smluvní jízdy</div>
         <div class="form-grid form-grid-2">
@@ -178,6 +185,7 @@
     <section id="output" class="hidden"></section>
 
     <div id="actions" class="action-stack hidden">
+      <button type="button" id="editShiftBtn" class="secondary"><svg class="icon"><use href="#icon-doc"></use></svg> Upravit údaje</button>
       <button type="button" id="newShiftBtn" class="secondary"><svg class="icon"><use href="#icon-refresh"></use></svg> Nová směna</button>
       <button type="button" id="shareImgBtn" class="primary"><svg class="icon"><use href="#icon-share"></use></svg> Sdílet výčetku</button>
       <button type="button" id="pdfExport" class="secondary"><svg class="icon"><use href="#icon-pdf"></use></svg> Export do PDF</button>

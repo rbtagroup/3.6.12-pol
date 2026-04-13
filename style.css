@@ -476,7 +476,7 @@ button.secondary {
   margin-top: 20px;
 }
 .action-stack {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   margin-top: 14px;
 }
 .action-stack button { min-height: 50px; }
@@ -1383,4 +1383,72 @@ button.secondary {
     flex-direction: column;
   }
   .notice-action { width: 100%; }
+}
+
+
+/* Draft, cash breakdown and inline validation */
+.field-error-text {
+  display: block;
+  margin-top: 6px;
+  color: #ffd8d8;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.35;
+}
+body.light-mode .field-error-text { color: #b42318; }
+.cash-check-panel { margin-top: 12px; }
+.cash-breakdown {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+.cash-breakdown div {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.045);
+}
+.cash-breakdown span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.cash-breakdown strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+body.light-mode .cash-breakdown div { background: rgba(255, 255, 255, 0.86); }
+@media (max-width: 560px) {
+  .cash-breakdown { grid-template-columns: 1fr; }
+}
+
+
+/* Completed report mode */
+.glass-shell.is-collapsed { display: none; }
+#output.is-stale {
+  border-color: rgba(255, 107, 107, 0.45);
+  opacity: 0.78;
+  position: relative;
+}
+#output.is-stale::before {
+  content: "Zastaralá výčetka - přepočítej po úpravě údajů";
+  display: block;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 107, 107, 0.32);
+  border-radius: var(--radius-md);
+  background: rgba(255, 107, 107, 0.10);
+  color: #ffd8d8;
+  font-size: 13px;
+  font-weight: 800;
+}
+body.light-mode #output.is-stale::before { color: #b42318; }
+@media (max-width: 760px) {
+  .glass-shell.is-collapsed + #output { margin-top: 0; }
 }

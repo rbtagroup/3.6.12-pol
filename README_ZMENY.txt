@@ -45,3 +45,17 @@ Vzhled 3.6.15:
 - méně rušivé ikony u formulářových labelů
 - výraznější pracovní výsledek ve finální výčetce
 - na mobilu jsou akční tlačítka lepkavě dole, aby nebylo nutné rolovat zpět
+
+
+UX tok 3.6.16:
+- rozepsaná směna se automaticky ukládá a po návratu obnoví
+- po výpočtu lze rozepsaná data ručně vymazat z hlášky
+- kontrola hotovosti ukazuje rozpad Má být / U sebe / Rozdíl
+- validační chyby se zobrazují přímo pod konkrétními poli
+
+
+Hotová výčetka 3.6.17:
+- po výpočtu se formulář sbalí a zůstane čistá hotová výčetka s akcemi
+- přidáno tlačítko Upravit údaje pro návrat k formuláři
+- výčetka zůstává jako uzamčený snapshot; po změně vstupů se označí jako zastaralá
+- export zastaralého snapshotu je blokovaný, dokud se výčetka znovu nepřepočítá

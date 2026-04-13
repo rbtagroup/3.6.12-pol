@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const VERSION = "3.6.15-clean-compact";
+  const VERSION = "3.6.17-done-report";
   const CONFIG_KEYS = {
     commRate: "rb_commRate",
     baseFull: "rb_baseFull",
@@ -34,11 +34,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const el = {
     form: document.getElementById("calcForm"),
+    calcShell: document.getElementById("calcShell"),
     output: document.getElementById("output"),
     actions: document.getElementById("actions"),
     resetBtn: document.getElementById("resetBtn"),
     pdfBtn: document.getElementById("pdfExport"),
     shareImgBtn: document.getElementById("shareImgBtn"),
+    editShiftBtn: document.getElementById("editShiftBtn"),
     newShiftBtn: document.getElementById("newShiftBtn"),
     themeToggle: document.getElementById("themeToggle"),
     settingsBtn: document.getElementById("settingsBtn"),
@@ -72,6 +74,10 @@ document.addEventListener("DOMContentLoaded", () => {
     liveDesk: document.getElementById("liveDesk"),
     liveSettlement: document.getElementById("liveCelkem"),
     cashCheckStatus: document.getElementById("cashCheckStatus"),
+    cashCheckBreakdown: document.getElementById("cashCheckBreakdown"),
+    cashExpected: document.getElementById("cashExpected"),
+    cashActualLive: document.getElementById("cashActualLive"),
+    cashDiffLive: document.getElementById("cashDiffLive"),
     setComm: document.getElementById("setComm"),
     setFull: document.getElementById("setFull"),
     setHalf: document.getElementById("setHalf"),
@@ -85,6 +91,8 @@ document.addEventListener("DOMContentLoaded", () => {
     "driverName", "shiftType", "rz", "kmStart", "kmEnd", "trzba", "pristavne",
     "palivo", "myti", "kartou", "fakturou", "jine", "cashActual", "iacCount", "shkmCount",
   ];
+
+  const DRAFT_KEY = "rb_shiftDraft";
 
   const FRIENDLY_NAMES = {
     pristavne: "Přístavné",
@@ -101,6 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let deferredPrompt = null;
   let lastRenderedData = null;
   let isCalculated = false;
+  let reportIsStale = false;
   let lastFocusedBeforeSettings = null;
   const libraryLoaders = {};
 
@@ -336,59 +345,67 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function clearErrors() {
     document.querySelectorAll(".input-error").forEach((field) => field.classList.remove("input-error"));
+    document.querySelectorAll(".field-error-text").forEach((message) => message.remove());
   }
 
-  function setFieldError(id) {
-    document.getElementById(id)?.classList.add("input-error");
+  function setFieldError(id, message = "") {
+    const field = document.getElementById(id);
+    if (!field) return;
+    field.classList.add("input-error");
+    if (!message) return;
+
+    const error = document.createElement("small");
+    error.className = "field-error-text";
+    error.textContent = message;
+    field.insertAdjacentElement("afterend", error);
+  }
+
+  function markFieldError(id, message) {
+    setFieldError(id, message);
+    return message;
   }
 
   function validate(values) {
     clearErrors();
 
     if (!values.driver) {
-      setFieldError("driverName");
-      return "Vyplň jméno řidiče.";
+      return markFieldError("driverName", "Vyplň jméno řidiče.");
     }
 
     if (values.kmStart < 0) {
-      setFieldError("kmStart");
-      return "Počáteční km nemohou být záporné.";
+      return markFieldError("kmStart", "Počáteční km nemohou být záporné.");
     }
 
     if (values.kmEnd < 0) {
-      setFieldError("kmEnd");
-      return "Konečné km nemohou být záporné.";
+      return markFieldError("kmEnd", "Konečné km nemohou být záporné.");
     }
 
     if (values.kmEnd < values.kmStart) {
-      setFieldError("kmEnd");
-      return "Konečný stav tachometru je menší než počáteční.";
+      return markFieldError("kmEnd", "Konečný stav tachometru je menší než počáteční.");
     }
 
     if (values.trzba <= 0) {
-      setFieldError("trzba");
-      return "Tržba musí být větší než 0.";
+      return markFieldError("trzba", "Tržba musí být větší než 0.");
     }
 
     for (const id of ["pristavne", "palivo", "myti", "kartou", "fakturou", "jine", "cashActual", "iacCount", "shkmCount"]) {
       if (values[id] < 0) {
-        setFieldError(id);
-        return `${FRIENDLY_NAMES[id]} nesmí být záporné.`;
+        return markFieldError(id, `${FRIENDLY_NAMES[id]} nesmí být záporné.`);
       }
     }
 
     for (const id of ["iacCount", "shkmCount"]) {
       if (!Number.isInteger(values[id])) {
-        setFieldError(id);
-        return `${FRIENDLY_NAMES[id]} musí být celé číslo.`;
+        return markFieldError(id, `${FRIENDLY_NAMES[id]} musí být celé číslo.`);
       }
     }
 
     const metrics = computeMetrics(values);
     if (metrics.invoiceKm > metrics.kmReal) {
-      setFieldError("iacCount");
-      setFieldError("shkmCount");
-      return `Smluvní km (${formatNumber(metrics.invoiceKm)}) jsou vyšší než najeté km (${formatNumber(metrics.kmReal)}).`;
+      const message = `Smluvní km (${formatNumber(metrics.invoiceKm)}) jsou vyšší než najeté km (${formatNumber(metrics.kmReal)}).`;
+      setFieldError("iacCount", message);
+      setFieldError("shkmCount", message);
+      return message;
     }
 
     return "";
@@ -408,17 +425,48 @@ document.addEventListener("DOMContentLoaded", () => {
     el.kpiStrip?.classList.toggle("is-single", !visible);
   }
 
+  function setReportActionsEnabled(enabled) {
+    if (el.shareImgBtn) el.shareImgBtn.disabled = !enabled;
+    if (el.pdfBtn) el.pdfBtn.disabled = !enabled;
+  }
+
+  function setFormCollapsed(collapsed) {
+    el.calcShell?.classList.toggle("is-collapsed", collapsed);
+  }
+
   function clearRenderedReport() {
     lastRenderedData = null;
+    reportIsStale = false;
     if (el.output) {
       el.output.innerHTML = "";
       el.output.classList.add("hidden");
+      el.output.classList.remove("is-stale");
     }
     el.actions?.classList.add("hidden");
+    setReportActionsEnabled(true);
+    setFormCollapsed(false);
+  }
+
+  function markReportStale() {
+    if (!lastRenderedData || reportIsStale) return;
+    reportIsStale = true;
+    isCalculated = false;
+    setDeltaVisibility(false);
+    el.output?.classList.add("is-stale");
+    setReportActionsEnabled(false);
+    showNotice("Údaje ve formuláři se změnily. Hotová výčetka níže je starý snapshot, přepočítej ji.", "bad", {
+      label: "Přepočítat",
+      onClick: () => el.form?.requestSubmit(),
+    });
   }
 
   function markReportDirty() {
+    if (lastRenderedData) {
+      markReportStale();
+      return;
+    }
     isCalculated = false;
+    reportIsStale = false;
     setDeltaVisibility(false);
     clearRenderedReport();
   }
@@ -491,11 +539,16 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateCashCheck(metrics) {
     if (!el.cashCheckStatus) return;
     el.cashCheckStatus.classList.remove("is-good", "is-bad");
+    el.cashCheckBreakdown?.classList.toggle("hidden", !metrics.hasCashActual);
 
     if (!metrics.hasCashActual) {
       el.cashCheckStatus.textContent = "Hotovost můžeš nechat prázdnou, kontrola se pak přeskočí.";
       return;
     }
+
+    if (el.cashExpected) el.cashExpected.textContent = formatMoney(metrics.settlement);
+    if (el.cashActualLive) el.cashActualLive.textContent = formatMoney(metrics.cashActual);
+    if (el.cashDiffLive) el.cashDiffLive.textContent = formatMoney(metrics.cashDiff);
 
     if (metrics.cashDiff === 0) {
       el.cashCheckStatus.classList.add("is-good");
@@ -714,17 +767,68 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function renderReport(metrics) {
     isCalculated = true;
+    reportIsStale = false;
     lastRenderedData = metrics;
     setDeltaVisibility(true);
     if (el.liveDelta) el.liveDelta.textContent = formatMoney(metrics.delta);
     updateStatus(metrics);
     el.output.innerHTML = buildReportHtml(metrics);
-    el.output.classList.remove("hidden");
+    el.output.classList.remove("hidden", "is-stale");
     el.actions?.classList.remove("hidden");
+    setReportActionsEnabled(true);
+    setFormCollapsed(true);
+    el.output?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function readDraft() {
+    try {
+      const draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || "null");
+      return draft && typeof draft === "object" ? draft : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function saveDraft() {
+    const fields = {};
+    FIELD_IDS.forEach((id) => {
+      const field = document.getElementById(id);
+      if (field) fields[id] = field.value;
+    });
+    localStorage.setItem(DRAFT_KEY, JSON.stringify({ fields, savedAt: Date.now() }));
+  }
+
+  function clearDraft() {
+    localStorage.removeItem(DRAFT_KEY);
+  }
+
+  function restoreDraft() {
+    const draft = readDraft();
+    if (!draft?.fields) return;
+
+    let restored = false;
+    FIELD_IDS.forEach((id) => {
+      const field = document.getElementById(id);
+      if (field && Object.prototype.hasOwnProperty.call(draft.fields, id)) {
+        field.value = draft.fields[id];
+        restored = restored || Boolean(draft.fields[id]);
+      }
+    });
+
+    if (restored) {
+      showNotice("Rozepsaná směna byla obnovena.", "neutral", {
+        label: "Vymazat",
+        onClick: () => {
+          clearDraft();
+          resetForm();
+          showNotice("Rozepsaná směna je vymazaná.", "good");
+        },
+      });
+    }
   }
 
   function resetForm(options = {}) {
-    const { keepName = false, keepRz = false, keepKmStart = false } = options;
+    const { keepName = false, keepRz = false, keepKmStart = false, clearReport = true } = options;
     const remembered = {
       driver: keepName ? getText("driverName") : "",
       rz: keepRz ? getText("rz") : "",
@@ -738,7 +842,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (remembered.kmStart) document.getElementById("kmStart").value = remembered.kmStart;
 
     clearErrors();
-    markReportDirty();
+    if (clearReport) {
+      clearRenderedReport();
+    } else {
+      markReportDirty();
+    }
     updateLivePreview();
   }
 
@@ -791,6 +899,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function shareReportImage() {
+    if (reportIsStale) throw new Error("Údaje se změnily. Nejdřív výčetku přepočítej.");
     const { blob, file, filename } = await buildReportImageFile("share");
 
     if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -806,6 +915,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function exportPdf() {
+    if (reportIsStale) throw new Error("Údaje se změnily. Nejdřív výčetku přepočítej.");
     await ensureExportLibraries(true);
 
     const { canvas } = await buildReportImageFile("share");
@@ -1025,29 +1135,48 @@ document.addEventListener("DOMContentLoaded", () => {
 
       clearNotice();
       renderReport(computeMetrics(values));
-      showNotice("Výčetka je vypočítaná a připravená k exportu.", "good");
+      saveDraft();
+      showNotice("Výčetka je hotová a připravená k exportu.", "good", {
+        label: "Vymazat rozepsané",
+        onClick: () => {
+          clearDraft();
+          showNotice("Rozepsaná směna je vymazaná.", "good");
+        },
+      });
     });
 
     FIELD_IDS.forEach((id) => {
       const field = document.getElementById(id);
       field?.addEventListener("input", () => {
         markReportDirty();
-        clearNotice();
+        if (!lastRenderedData) clearNotice();
+        saveDraft();
         updateLivePreview();
       });
       field?.addEventListener("change", () => {
         markReportDirty();
-        clearNotice();
+        if (!lastRenderedData) clearNotice();
+        saveDraft();
         updateLivePreview();
       });
     });
 
     el.resetBtn?.addEventListener("click", () => {
+      clearDraft();
       resetForm({ keepName: true });
+    });
+
+    el.editShiftBtn?.addEventListener("click", () => {
+      setFormCollapsed(false);
+      el.calcShell?.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (reportIsStale) {
+        showNotice("Uprav údaje a znovu klikni na Vypočítat výčetku.", "bad");
+      }
     });
 
     el.newShiftBtn?.addEventListener("click", () => {
       resetForm({ keepName: true, keepRz: true, keepKmStart: true });
+      saveDraft();
     });
 
     el.shareImgBtn?.addEventListener("click", async () => {
@@ -1060,7 +1189,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (error?.name === "AbortError") return;
         showNotice(`Sdílení obrázku selhalo: ${error.message || error}`, "bad");
       } finally {
-        el.shareImgBtn.disabled = false;
+        if (!reportIsStale) el.shareImgBtn.disabled = false;
       }
     });
 
@@ -1073,7 +1202,7 @@ document.addEventListener("DOMContentLoaded", () => {
       } catch (error) {
         showNotice(`Export do PDF selhal: ${error.message || error}`, "bad");
       } finally {
-        el.pdfBtn.disabled = false;
+        if (!reportIsStale) el.pdfBtn.disabled = false;
       }
     });
   }
@@ -1084,6 +1213,7 @@ document.addEventListener("DOMContentLoaded", () => {
   registerServiceWorker();
   if (el.appVersion) el.appVersion.textContent = `Verze ${VERSION}`;
   updateHeroConfig();
+  restoreDraft();
   bindEvents();
   updateLivePreview();
 });
