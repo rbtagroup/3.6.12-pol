@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rb-taxi-vycetka-v3-6-21-tip-cash';
+const CACHE_NAME = 'rb-taxi-vycetka-v3-6-22-cash-before-payout';
 const APP_SHELL = [
   './',
   './index.html',

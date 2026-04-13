@@ -36,7 +36,7 @@ Provozní nástroje 3.6.14:
 - v nastavení je tlačítko Otestovat export
 - v nastavení je tlačítko Načíst nejnovější verzi, které vymaže aplikační cache a obnoví stránku
 - aplikace hlásí dostupnou novou verzi service workeru a nabídne její načtení
-- přidána volitelná kontrola Hotovost u sebe proti částce k odevzdání
+- přidána volitelná kontrola Hotovost u sebe proti očekávané hotovosti
 
 
 Vzhled 3.6.15:
@@ -81,3 +81,8 @@ Dýško 3.6.21:
 - přebytek v poli Hotovost u sebe se zobrazuje jako dýško
 - dýško je jen informační rozdíl hotovosti, nemění výplatu ani částku k odevzdání
 - chybějící hotovost zůstává červeně jako kontrolní varování
+
+Hotovost u sebe 3.6.22:
+- kontrola Hotovost u sebe se počítá proti hotovosti včetně výplaty řidiče
+- očekávaná hotovost u sebe = K odevzdání celkem + výplata řidiče
+- náklady a nehotovost zůstávají odečtené; dýško je jen přebytek nad očekávanou hotovost
