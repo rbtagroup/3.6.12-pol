@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const VERSION = "3.6.24-platform-audit";
+  const VERSION = "3.6.25-premium-polish";
   const CONFIG_KEYS = {
     commRate: "rb_commRate",
     baseFull: "rb_baseFull",
@@ -673,12 +673,12 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="report-brand">
           <img src="icon-192.png" alt="RB TAXI" class="report-mark" />
           <div>
-            <div class="title">Výčetka řidiče</div>
+            <div class="title">Hotová výčetka</div>
             <div class="subtitle">RB TAXI Hodonín • ${safeDatum}</div>
           </div>
         </div>
         <div class="report-meta">
-          <div class="report-badge">Souhrn směny</div>
+          <div class="report-badge">Připraveno k odeslání</div>
           <div class="report-status ${metrics.nedoplatek ? "bad" : "good"}">${statusText}</div>
         </div>
       </div>
@@ -686,7 +686,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="report-total-card ${metrics.nedoplatek ? "is-bad" : "is-good"}">
         <div>
           <div class="report-total-label">K odevzdání celkem</div>
-          <div class="report-total-note">hotovost po odečtení výplaty${metrics.nedoplatek ? " a doplatku na minimum" : ""}</div>
+          <div class="report-total-note">hotovost po výplatě${metrics.nedoplatek ? " + doplatek na minimum" : ""}</div>
         </div>
         <div class="report-total-value">${formatMoney(metrics.settlement)}</div>
       </div>
@@ -769,7 +769,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="share-brand">
             <img src="icon-192.png" alt="RB TAXI" class="share-mark" />
             <div>
-              <div class="share-title">Výčetka řidiče</div>
+              <div class="share-title">Hotová výčetka</div>
               <div class="share-subtitle">RB TAXI Hodonín • ${safeDatum}</div>
             </div>
           </div>
@@ -779,7 +779,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="share-total ${metrics.nedoplatek ? "is-bad" : ""}">
           <div class="share-total-label">K odevzdání celkem</div>
           <div class="share-total-value">${formatMoney(metrics.settlement)}</div>
-          <div class="share-total-note">hotovost po odečtení výplaty${metrics.nedoplatek ? " a doplatku na minimum" : ""}</div>
+          <div class="share-total-note">hotovost po výplatě${metrics.nedoplatek ? " + doplatek na minimum" : ""}</div>
         </div>
 
         <div class="share-grid">
@@ -948,7 +948,7 @@ document.addEventListener("DOMContentLoaded", () => {
       await navigator.share({
         files: [file],
         title: "Výčetka",
-        text: "RB TAXI – Výčetka řidiče",
+        text: "RB TAXI – Hotová výčetka",
       });
       return { shared: true, downloaded: false };
     }
@@ -1185,7 +1185,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const text = el.networkStatus.querySelector("span:last-child");
       if (text) text.textContent = online ? "Online" : "Offline";
       if (announce) {
-        showNotice(online ? "Aplikace je zpět online." : "Aplikace je offline. Výpočet funguje, export může být omezený.", online ? "good" : "bad");
+        showNotice(online ? "Jsme online." : "Offline režim. Výpočet funguje, export může být omezený.", online ? "good" : "bad");
       }
     };
     update(false);

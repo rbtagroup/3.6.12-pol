@@ -98,3 +98,11 @@ Audit balík 3.6.24:
 - sdílení obrázku jasně rozlišuje skutečné sdílení a fallback stažení souboru
 - modal nastavení má lepší focus trap a validační chyby mají aria vazby
 - manifest doplněn o jazyk, kategorie, orientaci, shortcut a screenshoty pro širší PWA kompatibilitu
+
+
+Premium polish 3.6.25:
+- upraven finální výstup výčetky jako výraznější hotový doklad
+- doplněn akční panel pod výčetkou pro sdílení a PDF
+- zmenšena a sjednocena pole, tlačítka a karty pro kompaktnější profesionální vzhled
+- zklidněn header, statusy a světlý režim pro lepší čitelnost
+- zkráceny vybrané hlášky a texty ve výstupu
