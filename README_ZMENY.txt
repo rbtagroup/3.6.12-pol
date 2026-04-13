@@ -59,3 +59,8 @@ Hotová výčetka 3.6.17:
 - přidáno tlačítko Upravit údaje pro návrat k formuláři
 - výčetka zůstává jako uzamčený snapshot; po změně vstupů se označí jako zastaralá
 - export zastaralého snapshotu je blokovaný, dokud se výčetka znovu nepřepočítá
+
+Logo 3.6.18:
+- nahrazeny ikony aplikace novým logem RB TAXI
+- změna se promítá do hlavičky, exportu výčetky, manifestu i Apple/PWA ikony
+- navýšena cache service workeru, aby se po obnovení načetl nový obrázek
