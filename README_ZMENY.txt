@@ -76,3 +76,8 @@ Světlý režim 3.6.20:
 - pole formuláře mají čitelnější okraje, bílé pozadí a výraznější focus
 - karty a stavové boxy ve světlém režimu mají pevnější hranice
 - výsledek výčetky je ve světlém režimu čitelnější jako čistý doklad
+
+Dýško 3.6.21:
+- přebytek v poli Hotovost u sebe se zobrazuje jako dýško
+- dýško je jen informační rozdíl hotovosti, nemění výplatu ani částku k odevzdání
+- chybějící hotovost zůstává červeně jako kontrolní varování

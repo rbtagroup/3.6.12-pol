@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const VERSION = "3.6.20-light-readability";
+  const VERSION = "3.6.21-tip-cash";
   const CONFIG_KEYS = {
     commRate: "rb_commRate",
     baseFull: "rb_baseFull",
@@ -272,6 +272,23 @@ document.addEventListener("DOMContentLoaded", () => {
       pul: "1/2 směna",
     };
     return labels[value] || value || "—";
+  }
+
+  function getCashDiffLabel(metrics) {
+    if (!metrics.hasCashActual) return "Rozdíl hotovosti";
+    if (metrics.cashDiff > 0) return "Dýško";
+    if (metrics.cashDiff < 0) return "Chybí hotovost";
+    return "Hotovost sedí";
+  }
+
+  function getCashDiffClass(metrics) {
+    if (!metrics.hasCashActual || metrics.cashDiff >= 0) return "accent-pay";
+    return "accent-doplatek";
+  }
+
+  function formatCashDiff(metrics) {
+    if (metrics.cashDiff > 0) return `+${formatMoney(metrics.cashDiff)}`;
+    return formatMoney(metrics.cashDiff);
   }
 
   function readFormValues() {
@@ -548,7 +565,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (el.cashExpected) el.cashExpected.textContent = formatMoney(metrics.settlement);
     if (el.cashActualLive) el.cashActualLive.textContent = formatMoney(metrics.cashActual);
-    if (el.cashDiffLive) el.cashDiffLive.textContent = formatMoney(metrics.cashDiff);
+    if (el.cashDiffLive) el.cashDiffLive.textContent = formatCashDiff(metrics);
 
     if (metrics.cashDiff === 0) {
       el.cashCheckStatus.classList.add("is-good");
@@ -556,10 +573,14 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    if (metrics.cashDiff > 0) {
+      el.cashCheckStatus.classList.add("is-good");
+      el.cashCheckStatus.textContent = `Dýško ${formatMoney(metrics.cashDiff)} navíc. Výplatu ani k odevzdání to nemění.`;
+      return;
+    }
+
     el.cashCheckStatus.classList.add("is-bad");
-    el.cashCheckStatus.textContent = metrics.cashDiff > 0
-      ? `Hotovost je vyšší o ${formatMoney(metrics.cashDiff)}.`
-      : `Hotovost chybí o ${formatMoney(Math.abs(metrics.cashDiff))}.`;
+    el.cashCheckStatus.textContent = `Hotovost chybí o ${formatMoney(Math.abs(metrics.cashDiff))}.`;
   }
 
   function updateLivePreview() {
@@ -621,7 +642,7 @@ document.addEventListener("DOMContentLoaded", () => {
       row("Nehotovost celkem", formatMoney(metrics.nonCash), { icon: "icon-card", show: metrics.nonCash > 0 }),
       row("K odevzdání (hotovost)", formatMoney(metrics.kOdevzdani), { className: "accent-odev", icon: null }),
       row("Hotovost u sebe", formatMoney(metrics.cashActual), { icon: "icon-cash", show: metrics.hasCashActual }),
-      row("Rozdíl hotovosti", formatMoney(metrics.cashDiff), { className: metrics.cashDiff === 0 ? "accent-pay" : "accent-doplatek", icon: null, show: metrics.hasCashActual }),
+      row(getCashDiffLabel(metrics), formatCashDiff(metrics), { className: getCashDiffClass(metrics), icon: null, show: metrics.hasCashActual }),
       row("Výplata řidiče", formatMoney(metrics.vyplata), { className: "accent-pay", icon: null }),
       row("Doplatek řidiče na minimum", formatMoney(metrics.doplatek), { className: "accent-doplatek", icon: null, show: metrics.nedoplatek }),
       row("K odevzdání celkem", formatMoney(metrics.settlement), { className: "accent-grand", icon: null }),
@@ -755,7 +776,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ${metaItem("Najeté km", formatNumber(metrics.kmReal))}
           ${metaItem("Režim výplaty", safePayoutMode)}
           ${metaItem("Nehotovost", formatMoney(metrics.nonCash))}
-          ${metrics.hasCashActual ? metaItem("Rozdíl hotovosti", formatMoney(metrics.cashDiff)) : ""}
+          ${metrics.hasCashActual ? metaItem(getCashDiffLabel(metrics), formatCashDiff(metrics)) : ""}
         </div>
 
         <div class="share-note">
