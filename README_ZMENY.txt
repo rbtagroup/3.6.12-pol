@@ -70,3 +70,9 @@ Vizuální polish 3.6.19:
 - akce po výpočtu mají jasnější prioritu: sdílení je hlavní, úpravy jsou klidnější
 - mobilní rozložení má menší mezery, aby se méně scrollovalo
 - stav hotové a zastaralé výčetky je výraznější přímo v reportu
+
+Světlý režim 3.6.20:
+- zvýšen kontrast hlavních textů, hodnot a popisků
+- pole formuláře mají čitelnější okraje, bílé pozadí a výraznější focus
+- karty a stavové boxy ve světlém režimu mají pevnější hranice
+- výsledek výčetky je ve světlém režimu čitelnější jako čistý doklad
