@@ -64,3 +64,9 @@ Logo 3.6.18:
 - nahrazeny ikony aplikace novým logem RB TAXI
 - změna se promítá do hlavičky, exportu výčetky, manifestu i Apple/PWA ikony
 - navýšena cache service workeru, aby se po obnovení načetl nový obrázek
+
+Vizuální polish 3.6.19:
+- logo v hlavičce a výčetce je kulaté a líp sedí na nové RB TAXI ikoně
+- akce po výpočtu mají jasnější prioritu: sdílení je hlavní, úpravy jsou klidnější
+- mobilní rozložení má menší mezery, aby se méně scrollovalo
+- stav hotové a zastaralé výčetky je výraznější přímo v reportu

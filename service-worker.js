@@ -1,4 +1,4 @@
-const CACHE_NAME = 'rb-taxi-vycetka-v3-6-18-logo-rb';
+const CACHE_NAME = 'rb-taxi-vycetka-v3-6-19-visual-polish';
 const APP_SHELL = [
   './',
   './index.html',
