@@ -1,25 +1,35 @@
-const CACHE_NAME = 'rb-taxi-vycetka-v3-6-25-premium-polish';
+const CACHE_NAME = "rb-taxi-vycetka-v3-6-26-cache-refresh";
 const APP_SHELL = [
-  './',
-  './index.html',
-  './style.css',
-  './app.js',
-  './vendor/html2canvas.min.js',
-  './vendor/jspdf.umd.min.js',
-  './manifest.json',
-  './icon-192.png',
-  './icon-512.png',
-  './apple-touch-icon.png',
-  './screenshot-wide.png',
-  './screenshot-mobile.png'
+  "./",
+  "./index.html",
+  "./style.css",
+  "./app.js",
+  "./vendor/html2canvas.min.js",
+  "./vendor/jspdf.umd.min.js",
+  "./manifest.json",
+  "./icon-192.png",
+  "./icon-512.png",
+  "./apple-touch-icon.png",
+  "./screenshot-wide.png",
+  "./screenshot-mobile.png"
 ];
 
-self.addEventListener('install', (event) => {
+const NETWORK_FIRST_ASSETS = new Set([
+  "/",
+  "/index.html",
+  "/style.css",
+  "/app.js",
+  "/manifest.json",
+  "/vendor/html2canvas.min.js",
+  "/vendor/jspdf.umd.min.js",
+]);
+
+self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)));
   self.skipWaiting();
 });
 
-self.addEventListener('activate', (event) => {
+self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) => Promise.all(
       keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
@@ -28,34 +38,36 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-self.addEventListener('fetch', (event) => {
-  if (event.request.method !== 'GET') return;
+self.addEventListener("fetch", (event) => {
+  if (event.request.method !== "GET") return;
 
-  const isSameOrigin = new URL(event.request.url).origin === self.location.origin;
-  if (!isSameOrigin) return;
+  const requestUrl = new URL(event.request.url);
+  if (requestUrl.origin !== self.location.origin) return;
 
-  if (event.request.mode === 'navigate') {
-    event.respondWith((async () => {
-      try {
-        const fresh = await fetch(event.request);
-        const cache = await caches.open(CACHE_NAME);
-        cache.put('./index.html', fresh.clone());
-        return fresh;
-      } catch {
-        return caches.match('./index.html');
-      }
-    })());
-    return;
-  }
+  const shouldUseNetworkFirst = event.request.mode === "navigate" || [...NETWORK_FIRST_ASSETS].some((assetPath) => requestUrl.pathname.endsWith(assetPath));
 
   event.respondWith((async () => {
+    if (shouldUseNetworkFirst) {
+      try {
+        const fresh = await fetch(event.request, { cache: "no-store" });
+        if (fresh.ok) {
+          const cache = await caches.open(CACHE_NAME);
+          await cache.put(event.request, fresh.clone());
+          if (event.request.mode === "navigate") await cache.put("./index.html", fresh.clone());
+        }
+        return fresh;
+      } catch {
+        return caches.match(event.request) || caches.match("./index.html");
+      }
+    }
+
     const cached = await caches.match(event.request);
     if (cached) return cached;
 
     const response = await fetch(event.request);
     if (response.ok) {
       const cache = await caches.open(CACHE_NAME);
-      cache.put(event.request, response.clone());
+      await cache.put(event.request, response.clone());
     }
     return response;
   })());

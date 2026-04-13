@@ -106,3 +106,9 @@ Premium polish 3.6.25:
 - zmenšena a sjednocena pole, tlačítka a karty pro kompaktnější profesionální vzhled
 - zklidněn header, statusy a světlý režim pro lepší čitelnost
 - zkráceny vybrané hlášky a texty ve výstupu
+
+
+Cache refresh 3.6.26:
+- přidána verze do URL hlavních CSS/JS/vendor souborů, aby mobil nenačítal starou kopii
+- service worker pro HTML, CSS, JS, manifest a exportní knihovny používá network-first strategii
+- doplněny no-cache meta tagy v HTML jako pojistka pro mobilní prohlížeče
