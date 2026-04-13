@@ -37,3 +37,11 @@ Provozní nástroje 3.6.14:
 - v nastavení je tlačítko Načíst nejnovější verzi, které vymaže aplikační cache a obnoví stránku
 - aplikace hlásí dostupnou novou verzi service workeru a nabídne její načtení
 - přidána volitelná kontrola Hotovost u sebe proti částce k odevzdání
+
+
+Vzhled 3.6.15:
+- přidán čistší kompaktní vizuální režim přes CSS vrstvu
+- ubrané skleněné efekty, radiální dekorace, silné stíny a přebytečný glow
+- méně rušivé ikony u formulářových labelů
+- výraznější pracovní výsledek ve finální výčetce
+- na mobilu jsou akční tlačítka lepkavě dole, aby nebylo nutné rolovat zpět
