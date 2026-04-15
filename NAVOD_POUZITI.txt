@@ -1,0 +1,49 @@
+RB TAXI - Vycetka ridice
+Navod k pouziti stabilni mobilni verze 3.6.28-stable-mobile
+
+Adresa aplikace v lokalni siti:
+http://192.168.68.100:4176/index.html?v=3.6.28-stable-mobile
+
+Telefon musi byt pripojeny ke stejne Wi-Fi siti jako pocitac, ze ktereho aplikace bezi.
+
+INSTALACE NA iPHONE
+1. Otevri odkaz v Safari.
+2. Klepni na Sdilet.
+3. Zvol Pridat na plochu.
+4. Potvrd pridani.
+5. Aplikaci potom spoustej ikonou z plochy.
+
+INSTALACE NA ANDROID
+1. Otevri odkaz v Chrome.
+2. Pokud se zobrazi nabidka Instalovat aplikaci, klepni na ni.
+3. Pokud se nezobrazi, otevri menu Chrome a zvol Pridat na plochu.
+4. Aplikaci potom spoustej ikonou z plochy.
+
+JAK POZNAT SPRAVNOU VERZI
+V hlavicce aplikace musi byt uvedeno:
+Verze 3.6.28-stable-mobile
+
+KDYZ SE UKAZE STARA VERZE
+1. Otevri Nastaveni v aplikaci.
+2. Klepni na Nacist nejnovejsi verzi.
+3. Pokud se stara verze drzi dal, smaz ikonu aplikace z plochy telefonu.
+4. Otevri novy odkaz v Safari/Chrome a pridej aplikaci na plochu znovu.
+
+ZAKLADNI POUZITI
+1. Vypln ridice, typ smeny a RZ vozidla.
+2. Zadej pocatecni a konecne kilometry.
+3. Zadej trzbu, pristavne, naklady, platby kartou/fakturou a pripadne celou hotovost u sebe.
+4. Pokud byly smluvni jizdy, zadej pocet IAC nebo SHKM.
+5. Klepni na Vypocitat vycetku.
+6. Zkontroluj hlavne castku K odevzdani celkem.
+7. Pro odeslani pouzij Sdilet vycetku.
+8. Pro archiv pouzij Export do PDF.
+
+POZNAMKY K VYPOCTU
+- Pristavne se nepocita do provize ridice, ale zustava v castce k odevzdani.
+- Cela hotovost u sebe je hotovost pred oddelenim vyplaty.
+- Prebytek hotovosti se zobrazi jako dysko / rozdil.
+- Dysko je informacni kontrola hotovosti, nemeni vyplatu ani castku k odevzdani.
+
+DOPORUCENI PRO PROVOZ
+Pred nasazenim vsem ridicum otestuj aplikaci alespon na jedne realne denni a jedne nocni smene.

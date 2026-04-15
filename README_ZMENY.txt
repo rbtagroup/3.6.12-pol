@@ -123,3 +123,12 @@ iOS stability 3.6.27:
 No edge slider 3.6.28:
 - odstraněny záporné mobilní okraje u spodních akčních lišt, aby nic neutíkalo doprava
 - skryty systémové scrollbary aplikace, pokud je prohlížeč vykreslí na hraně obsahu
+
+
+Stable mobile 3.6.28:
+- verze označena jako stabilní mobilní build po ověření na iPhonu
+- doporučený instalační postup:
+  iPhone: otevřít v Safari, klepnout na Sdílet a zvolit Přidat na plochu
+  Android: otevřít v Chrome a zvolit Instalovat aplikaci nebo Přidat na plochu
+  při staré verzi: v aplikaci otevřít Nastavení a dát Načíst nejnovější verzi
+- další ladění dělat až po nové záloze této stabilní verze

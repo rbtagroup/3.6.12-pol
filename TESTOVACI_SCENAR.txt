@@ -1,0 +1,78 @@
+RB TAXI - Testovaci scenar aplikace Vycetka
+Stabilni mobilni verze: 3.6.28-stable-mobile
+
+CIL TESTU
+Overit, ze ridic dokaze na telefonu vyplnit smenu, spocitat vycetku, zkontrolovat castky a odeslat nebo ulozit vystup.
+
+TEST 1 - OTEVRENI A VERZE
+1. Otevri aplikaci na telefonu.
+2. Zkontroluj, ze v hlavicce je Verze 3.6.28-stable-mobile.
+3. Zkontroluj, ze se stranka na iPhonu nehybe do strany a neni videt pravy jezdec.
+4. Klepni do nekolika poli a over, ze se stranka zbytecne nepriblizuje.
+
+Ocekavany vysledek:
+Aplikace je stabilni, neplave do strany a ukazuje spravnou verzi.
+
+TEST 2 - BEZNA SMENA
+1. Vypln ridice.
+2. Vyber typ smeny.
+3. Vyber RZ vozidla.
+4. Zadej pocatecni km a konecne km.
+5. Zadej trzbu.
+6. Zadej pripadne palivo, myti, kartou, fakturou a jine.
+7. Klepni na Vypocitat vycetku.
+
+Ocekavany vysledek:
+Zobrazi se hotova vycetka a castka K odevzdani celkem je citelna a jasna.
+
+TEST 3 - PRISTAVNE
+1. Vypln smenu s trzbu.
+2. Zadej pristavne.
+3. Spocitej vycetku.
+4. Zkontroluj, ze pristavne snizuje netto pro vypocet provize.
+5. Zkontroluj, ze pristavne zustava v castce k odevzdani.
+
+Ocekavany vysledek:
+Pristavne je vyjmute z provize ridice, ale zustava firme.
+
+TEST 4 - CELA HOTOVOST U SEBE A DYSKO
+1. Vypln smenu.
+2. Zadej celou hotovost u sebe pred oddelenim vyplaty.
+3. Zkus castku presne podle ocekavane hotovosti.
+4. Zkus castku vyssi nez ocekavana hotovost.
+5. Zkus castku nizsi nez ocekavana hotovost.
+
+Ocekavany vysledek:
+Pri presne hotovosti se rozdil nezobrazuje jako problem.
+Pri vyssi hotovosti se ukaze dysko / prebytek.
+Pri nizsi hotovosti se ukaze chybejici hotovost.
+
+TEST 5 - EXPORT A SDILENI
+1. Po vypoctu klepni na Sdilet vycetku.
+2. Over, ze telefon nabidne sdileni, nebo se stahne obrazek jako zalozni varianta.
+3. Klepni na Export do PDF.
+4. Over, ze se PDF ulozi nebo nabidne ke stazeni.
+
+Ocekavany vysledek:
+Ridic umi vycetku odeslat jako obrazek a ulozit jako PDF.
+
+TEST 6 - STARA VERZE / CACHE
+1. Otevri Nastaveni.
+2. Klepni na Nacist nejnovejsi verzi.
+3. Po znovunacteni zkontroluj verzi v hlavicce.
+
+Ocekavany vysledek:
+Aplikace se obnovi a zustane na verzi 3.6.28-stable-mobile.
+
+ZAZNAM Z TESTU
+Datum:
+Telefon / system:
+Ridic:
+Smena:
+Fungovalo sdileni obrazku: ano / ne
+Fungoval export PDF: ano / ne
+Castky sedi: ano / ne
+Poznamky ridice:
+
+DOPORUCENI
+Pokud se pri testu objevi problem, zapsat presny telefon, prohlizec, kroky a fotku obrazovky. Nepridavat dalsi funkce, dokud se neoveri realne chyby z provozu.
