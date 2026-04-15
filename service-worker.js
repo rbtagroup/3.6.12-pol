@@ -1,5 +1,5 @@
 const CACHE_PREFIX = "rb-taxi-vycetka-";
-const CACHE_NAME = CACHE_PREFIX + "v3-6-28-stable-mobile";
+const CACHE_NAME = CACHE_PREFIX + "v3-6-29-keyboard-safe";
 const APP_SHELL = [
   "./",
   "./index.html",

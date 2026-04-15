@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const VERSION = "3.6.28-stable-mobile";
+  const VERSION = "3.6.29-keyboard-safe";
   const CACHE_PREFIX = "rb-taxi-vycetka-";
   const CONFIG_KEYS = {
     commRate: "rb_commRate",
@@ -1199,6 +1199,47 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("offline", () => update(true));
   }
 
+
+  function initKeyboardGuard() {
+    const keyboardTarget = "input, select, textarea";
+    const visualViewport = window.visualViewport;
+
+    const setKeyboardState = () => {
+      const viewportHeight = visualViewport?.height || window.innerHeight;
+      const viewportOffsetTop = visualViewport?.offsetTop || 0;
+      const keyboardInset = Math.max(0, Math.round(window.innerHeight - viewportHeight - viewportOffsetTop));
+      const keyboardOpen = keyboardInset > 90;
+
+      document.body.classList.toggle("keyboard-open", keyboardOpen);
+      document.documentElement.style.setProperty("--keyboard-inset", (keyboardOpen ? keyboardInset : 0) + "px");
+    };
+
+    const keepFocusedFieldVisible = () => {
+      const active = document.activeElement;
+      if (!active?.matches?.(keyboardTarget)) return;
+
+      window.setTimeout(() => {
+        active.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+      }, 140);
+    };
+
+    visualViewport?.addEventListener("resize", setKeyboardState);
+    visualViewport?.addEventListener("scroll", setKeyboardState);
+    window.addEventListener("resize", setKeyboardState);
+
+    document.addEventListener("focusin", (event) => {
+      if (!event.target?.matches?.(keyboardTarget)) return;
+      setKeyboardState();
+      keepFocusedFieldVisible();
+    });
+
+    document.addEventListener("focusout", () => {
+      window.setTimeout(setKeyboardState, 160);
+    });
+
+    setKeyboardState();
+  }
+
   function registerServiceWorker() {
     if (!("serviceWorker" in navigator)) return;
 
@@ -1319,6 +1360,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initSettings();
   initPwaPrompt();
   initConnectivity();
+  initKeyboardGuard();
   registerServiceWorker();
   if (el.appVersion) el.appVersion.textContent = `Verze ${VERSION}`;
   updateHeroConfig();

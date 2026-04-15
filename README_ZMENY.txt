@@ -136,3 +136,9 @@ Stable mobile 3.6.28:
 
 Production hardening:
 - cache a service worker reset jsou omezeny jen na tuto aplikaci, aby nezasahovaly jiné GitHub Pages aplikace na stejné doméně
+
+
+Keyboard safe 3.6.29:
+- Pridana ochrana proti prekryvani formulare mobilni klavesnici pres VisualViewport.
+- Pri psani se aktivni pole automaticky posune do viditelne casti obrazovky.
+- Spodni akcni panel se pri otevrene klavesnici docasne vrati do toku stranky, aby neprekryval pole na iOS/Androidu.

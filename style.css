@@ -1975,3 +1975,33 @@ main::-webkit-scrollbar {
     overflow: hidden;
   }
 }
+
+
+/* Keyboard safe 3.6.29 */
+:root {
+  --keyboard-inset: 0px;
+}
+input,
+select,
+textarea {
+  scroll-margin-top: 92px;
+  scroll-margin-bottom: calc(120px + var(--keyboard-inset));
+}
+@media (max-width: 760px) {
+  body.keyboard-open {
+    overscroll-behavior-y: contain;
+  }
+  body.keyboard-open main {
+    padding-bottom: max(140px, calc(var(--keyboard-inset) + 48px));
+  }
+  body.keyboard-open .form-actions,
+  body.keyboard-open .action-stack {
+    position: static;
+    bottom: auto;
+    transform: none;
+  }
+  body.keyboard-open .app-notice {
+    position: relative;
+    z-index: 36;
+  }
+}
