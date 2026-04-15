@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const VERSION = "3.6.30-keyboard-lite";
+  const VERSION = "3.6.31-android-keyboard";
   const CACHE_PREFIX = "rb-taxi-vycetka-";
   const CONFIG_KEYS = {
     commRate: "rb_commRate",
@@ -1206,13 +1206,29 @@ document.addEventListener("DOMContentLoaded", () => {
     let frameId = 0;
     let lastKeyboardInset = -1;
     let lastKeyboardOpen = false;
+    let baselineViewportHeight = Math.max(window.innerHeight, visualViewport?.height || 0);
+
+    const getViewportHeight = () => visualViewport?.height || window.innerHeight;
+    const getFocusedInput = () => {
+      const active = document.activeElement;
+      return active?.matches?.(keyboardTarget) ? active : null;
+    };
+    const updateBaseline = () => {
+      baselineViewportHeight = Math.max(window.innerHeight, getViewportHeight(), baselineViewportHeight);
+    };
 
     const applyKeyboardState = () => {
       frameId = 0;
-      const viewportHeight = visualViewport?.height || window.innerHeight;
+      const activeInput = getFocusedInput();
+      const viewportHeight = getViewportHeight();
       const viewportOffsetTop = visualViewport?.offsetTop || 0;
-      const keyboardInset = Math.max(0, Math.round(window.innerHeight - viewportHeight - viewportOffsetTop));
-      const keyboardOpen = keyboardInset > 90;
+
+      if (!activeInput) updateBaseline();
+
+      const keyboardInset = activeInput
+        ? Math.max(0, Math.round(baselineViewportHeight - viewportHeight - viewportOffsetTop))
+        : 0;
+      const keyboardOpen = Boolean(activeInput && keyboardInset > 90);
 
       if (keyboardInset === lastKeyboardInset && keyboardOpen === lastKeyboardOpen) return;
       lastKeyboardInset = keyboardInset;
@@ -1228,34 +1244,49 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const keepFocusedFieldVisible = () => {
-      const active = document.activeElement;
-      if (!active?.matches?.(keyboardTarget)) return;
+      const active = getFocusedInput();
+      if (!active) return;
 
       window.setTimeout(() => {
-        const rect = active.getBoundingClientRect();
-        const viewportHeight = visualViewport?.height || window.innerHeight;
+        const currentActive = getFocusedInput();
+        if (!currentActive) return;
+
+        const rect = currentActive.getBoundingClientRect();
+        const viewportHeight = getViewportHeight();
         const topLimit = 88;
         const bottomLimit = Math.max(180, viewportHeight - 132);
         const needsScroll = rect.top < topLimit || rect.bottom > bottomLimit;
 
         if (needsScroll) {
-          active.scrollIntoView({ behavior: "auto", block: "center", inline: "nearest" });
+          currentActive.scrollIntoView({ behavior: "auto", block: "center", inline: "nearest" });
         }
-      }, 220);
+      }, 300);
     };
 
     visualViewport?.addEventListener("resize", scheduleKeyboardState, { passive: true });
     visualViewport?.addEventListener("scroll", scheduleKeyboardState, { passive: true });
     window.addEventListener("resize", scheduleKeyboardState, { passive: true });
+    window.addEventListener("orientationchange", () => {
+      window.setTimeout(() => {
+        baselineViewportHeight = Math.max(window.innerHeight, getViewportHeight());
+        lastKeyboardInset = -1;
+        scheduleKeyboardState();
+      }, 450);
+    }, { passive: true });
 
     document.addEventListener("focusin", (event) => {
       if (!event.target?.matches?.(keyboardTarget)) return;
+      updateBaseline();
       scheduleKeyboardState();
+      window.setTimeout(scheduleKeyboardState, 260);
       keepFocusedFieldVisible();
     });
 
     document.addEventListener("focusout", () => {
-      window.setTimeout(scheduleKeyboardState, 160);
+      window.setTimeout(() => {
+        baselineViewportHeight = Math.max(window.innerHeight, getViewportHeight());
+        scheduleKeyboardState();
+      }, 220);
     });
 
     scheduleKeyboardState();

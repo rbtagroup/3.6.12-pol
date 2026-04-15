@@ -148,3 +148,9 @@ Keyboard lite 3.6.30:
 - Zjemnena obsluha mobilni klavesnice, aby se pri psani nespoustel zbytecny plynuly scroll.
 - Stav klavesnice se prepocitava pres requestAnimationFrame a zapisuje se jen pri skutecne zmene.
 - Aktivni pole se posune jen kdyz je mimo bezpecnou viditelnou oblast.
+
+
+Android keyboard 3.6.31:
+- Detekce klavesnice uz nepocita jen rozdil window.innerHeight a visualViewport.height, protoze Android Chrome casto zmensi obe hodnoty zaroven.
+- Pridana baseline vyska viewportu pred fokusem pole, diky ktere se keyboard-open spolehlive zapne i na Androidu.
+- Po zmene orientace se baseline prepocita, aby nevznikal falesny keyboard stav.
