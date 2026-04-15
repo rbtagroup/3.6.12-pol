@@ -1,10 +1,10 @@
 RB TAXI - Vycetka ridice
 Navod k pouziti stabilni mobilni verze 3.6.28-stable-mobile
 
-Adresa aplikace v lokalni siti:
-http://192.168.68.100:4176/index.html?v=3.6.28-stable-mobile
+Adresa aplikace:
+https://rbtagroup.github.io/3.6.12-pol/
 
-Telefon musi byt pripojeny ke stejne Wi-Fi siti jako pocitac, ze ktereho aplikace bezi.
+Aplikace je dostupna pres internet. Telefon nemusi byt ve stejne Wi-Fi siti jako pocitac.
 
 INSTALACE NA iPHONE
 1. Otevri odkaz v Safari.
