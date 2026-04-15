@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const VERSION = "3.6.29-keyboard-safe";
+  const VERSION = "3.6.30-keyboard-lite";
   const CACHE_PREFIX = "rb-taxi-vycetka-";
   const CONFIG_KEYS = {
     commRate: "rb_commRate",
@@ -1203,15 +1203,28 @@ document.addEventListener("DOMContentLoaded", () => {
   function initKeyboardGuard() {
     const keyboardTarget = "input, select, textarea";
     const visualViewport = window.visualViewport;
+    let frameId = 0;
+    let lastKeyboardInset = -1;
+    let lastKeyboardOpen = false;
 
-    const setKeyboardState = () => {
+    const applyKeyboardState = () => {
+      frameId = 0;
       const viewportHeight = visualViewport?.height || window.innerHeight;
       const viewportOffsetTop = visualViewport?.offsetTop || 0;
       const keyboardInset = Math.max(0, Math.round(window.innerHeight - viewportHeight - viewportOffsetTop));
       const keyboardOpen = keyboardInset > 90;
 
+      if (keyboardInset === lastKeyboardInset && keyboardOpen === lastKeyboardOpen) return;
+      lastKeyboardInset = keyboardInset;
+      lastKeyboardOpen = keyboardOpen;
+
       document.body.classList.toggle("keyboard-open", keyboardOpen);
       document.documentElement.style.setProperty("--keyboard-inset", (keyboardOpen ? keyboardInset : 0) + "px");
+    };
+
+    const scheduleKeyboardState = () => {
+      if (frameId) return;
+      frameId = window.requestAnimationFrame(applyKeyboardState);
     };
 
     const keepFocusedFieldVisible = () => {
@@ -1219,25 +1232,33 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!active?.matches?.(keyboardTarget)) return;
 
       window.setTimeout(() => {
-        active.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
-      }, 140);
+        const rect = active.getBoundingClientRect();
+        const viewportHeight = visualViewport?.height || window.innerHeight;
+        const topLimit = 88;
+        const bottomLimit = Math.max(180, viewportHeight - 132);
+        const needsScroll = rect.top < topLimit || rect.bottom > bottomLimit;
+
+        if (needsScroll) {
+          active.scrollIntoView({ behavior: "auto", block: "center", inline: "nearest" });
+        }
+      }, 220);
     };
 
-    visualViewport?.addEventListener("resize", setKeyboardState);
-    visualViewport?.addEventListener("scroll", setKeyboardState);
-    window.addEventListener("resize", setKeyboardState);
+    visualViewport?.addEventListener("resize", scheduleKeyboardState, { passive: true });
+    visualViewport?.addEventListener("scroll", scheduleKeyboardState, { passive: true });
+    window.addEventListener("resize", scheduleKeyboardState, { passive: true });
 
     document.addEventListener("focusin", (event) => {
       if (!event.target?.matches?.(keyboardTarget)) return;
-      setKeyboardState();
+      scheduleKeyboardState();
       keepFocusedFieldVisible();
     });
 
     document.addEventListener("focusout", () => {
-      window.setTimeout(setKeyboardState, 160);
+      window.setTimeout(scheduleKeyboardState, 160);
     });
 
-    setKeyboardState();
+    scheduleKeyboardState();
   }
 
   function registerServiceWorker() {

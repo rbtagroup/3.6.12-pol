@@ -142,3 +142,9 @@ Keyboard safe 3.6.29:
 - Pridana ochrana proti prekryvani formulare mobilni klavesnici pres VisualViewport.
 - Pri psani se aktivni pole automaticky posune do viditelne casti obrazovky.
 - Spodni akcni panel se pri otevrene klavesnici docasne vrati do toku stranky, aby neprekryval pole na iOS/Androidu.
+
+
+Keyboard lite 3.6.30:
+- Zjemnena obsluha mobilni klavesnice, aby se pri psani nespoustel zbytecny plynuly scroll.
+- Stav klavesnice se prepocitava pres requestAnimationFrame a zapisuje se jen pri skutecne zmene.
+- Aktivni pole se posune jen kdyz je mimo bezpecnou viditelnou oblast.

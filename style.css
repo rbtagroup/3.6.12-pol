@@ -1977,7 +1977,7 @@ main::-webkit-scrollbar {
 }
 
 
-/* Keyboard safe 3.6.29 */
+/* Keyboard safe 3.6.30 */
 :root {
   --keyboard-inset: 0px;
 }
@@ -1985,7 +1985,7 @@ input,
 select,
 textarea {
   scroll-margin-top: 92px;
-  scroll-margin-bottom: calc(120px + var(--keyboard-inset));
+  scroll-margin-bottom: calc(96px + var(--keyboard-inset));
 }
 @media (max-width: 760px) {
   body.keyboard-open {
