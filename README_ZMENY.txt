@@ -132,3 +132,7 @@ Stable mobile 3.6.28:
   Android: otevřít v Chrome a zvolit Instalovat aplikaci nebo Přidat na plochu
   při staré verzi: v aplikaci otevřít Nastavení a dát Načíst nejnovější verzi
 - další ladění dělat až po nové záloze této stabilní verze
+
+
+Production hardening:
+- cache a service worker reset jsou omezeny jen na tuto aplikaci, aby nezasahovaly jiné GitHub Pages aplikace na stejné doméně

@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const VERSION = "3.6.28-stable-mobile";
+  const CACHE_PREFIX = "rb-taxi-vycetka-";
   const CONFIG_KEYS = {
     commRate: "rb_commRate",
     baseFull: "rb_baseFull",
@@ -1023,12 +1024,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if ("serviceWorker" in navigator) {
       const registrations = await navigator.serviceWorker.getRegistrations();
-      await Promise.all(registrations.map((registration) => registration.unregister()));
+      const appScope = new URL("./", window.location.href).href;
+      await Promise.all(registrations
+        .filter((registration) => registration.scope === appScope)
+        .map((registration) => registration.unregister()));
     }
 
     if ("caches" in window) {
       const keys = await caches.keys();
-      await Promise.all(keys.map((key) => caches.delete(key)));
+      await Promise.all(keys
+        .filter((key) => key.startsWith(CACHE_PREFIX))
+        .map((key) => caches.delete(key)));
     }
 
     window.location.reload();
