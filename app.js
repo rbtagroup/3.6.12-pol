@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const VERSION = "3.6.34-android-minimal-scroll";
+  const VERSION = "3.6.35-clean-report";
   const CACHE_PREFIX = "rb-taxi-vycetka-";
   const CONFIG_KEYS = {
     commRate: "rb_commRate",
@@ -659,7 +659,6 @@ document.addEventListener("DOMContentLoaded", () => {
       row("Kartou", formatMoney(metrics.kartou), { icon: "icon-card", show: metrics.kartou > 0 }),
       row("Fakturou", formatMoney(metrics.fakturou), { icon: "icon-doc", show: metrics.fakturou > 0 }),
       row("Jiné", formatMoney(metrics.jine), { icon: "icon-doc", show: metrics.jine > 0 }),
-      row("Nehotovost celkem", formatMoney(metrics.nonCash), { icon: "icon-card", show: metrics.nonCash > 0 }),
       row("K odevzdání (hotovost)", formatMoney(metrics.kOdevzdani), { className: "accent-odev", icon: null }),
       row("Má být u sebe (vč. výplaty)", formatMoney(metrics.cashExpected), { icon: "icon-cash", show: metrics.hasCashActual }),
       row("Celá hotovost u sebe", formatMoney(metrics.cashActual), { icon: "icon-cash", show: metrics.hasCashActual }),
@@ -728,7 +727,6 @@ document.addEventListener("DOMContentLoaded", () => {
           ${row("Účtované km", formatNumber(metrics.chargedKm), { icon: "icon-road" })}
           ${row("Smluvní jízdy", safeContracts, { icon: "icon-doc", show: contractItems.length > 0 })}
           ${row("KM smluvní", formatNumber(metrics.invoiceKm), { icon: "icon-doc", show: metrics.invoiceKm > 0 })}
-          ${row("Minimum podle km", formatMoney(metrics.minTrzba), { icon: "icon-cash", show: metrics.minTrzba > 0 })}
         </section>
 
         <section class="detail-card detail-card-wide">
@@ -796,7 +794,6 @@ document.addEventListener("DOMContentLoaded", () => {
           ${metaItem("RZ", safeRz)}
           ${metaItem("Najeté km", formatNumber(metrics.kmReal))}
           ${metaItem("Režim výplaty", safePayoutMode)}
-          ${metaItem("Nehotovost", formatMoney(metrics.nonCash))}
           ${metrics.hasCashActual ? metaItem("Má být u sebe", formatMoney(metrics.cashExpected)) : ""}
           ${metrics.hasCashActual && metrics.cashDiff !== 0 ? metaItem(getCashDiffLabel(metrics), formatCashDiff(metrics)) : ""}
         </div>

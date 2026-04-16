@@ -172,3 +172,9 @@ Android minimal scroll 3.6.34:
 - Android uz neni bez JS posunu uplne; po otevreni klavesnice se provede jen male jednorazove dorovnani, pokud je aktivni pole porad mimo viditelnou cast.
 - Nepouziva se centrovani pole pres scrollIntoView, aby se nevratilo dvojite poskakovani.
 - iOS vetev zustava beze zmeny.
+
+
+Clean report 3.6.35:
+- Ve vysledne vycetce je schovany radek Minimum podle km v sekci Kilometry.
+- Ve vysledne vycetce a sdilenem exportu je schovana samostatna polozka Nehotovost.
+- Vypocty zustavaji beze zmeny, meni se pouze zobrazeni hotove vycetky.
