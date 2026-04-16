@@ -154,3 +154,9 @@ Android keyboard 3.6.31:
 - Detekce klavesnice uz nepocita jen rozdil window.innerHeight a visualViewport.height, protoze Android Chrome casto zmensi obe hodnoty zaroven.
 - Pridana baseline vyska viewportu pred fokusem pole, diky ktere se keyboard-open spolehlive zapne i na Androidu.
 - Po zmene orientace se baseline prepocita, aby nevznikal falesny keyboard stav.
+
+
+Android steady 3.6.32:
+- Pro Android se pri otevrene klavesnici nepouziva promenlivy keyboard inset, protoze Chrome uz viewport casto zmensuje sam.
+- Pridana trida android-keyboard a pevna spodni rezerva, aby obsah pri psani neposkakoval podle kazde zmeny vysky klavesnice nebo adresniho radku.
+- iOS vetev zustava dynamicka, protoze tam se chovani v realnem testu potvrdilo jako spravne.

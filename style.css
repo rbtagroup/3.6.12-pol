@@ -1977,7 +1977,7 @@ main::-webkit-scrollbar {
 }
 
 
-/* Keyboard safe 3.6.31 */
+/* Keyboard safe 3.6.32 */
 :root {
   --keyboard-inset: 0px;
 }
@@ -1993,6 +1993,13 @@ textarea {
   }
   body.keyboard-open main {
     padding-bottom: max(140px, calc(var(--keyboard-inset) + 48px));
+  }
+
+  body.android-keyboard.keyboard-open {
+    --keyboard-inset: 0px;
+  }
+  body.android-keyboard.keyboard-open main {
+    padding-bottom: 140px;
   }
   body.keyboard-open .form-actions,
   body.keyboard-open .action-stack {

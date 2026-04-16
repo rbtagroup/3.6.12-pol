@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const VERSION = "3.6.31-android-keyboard";
+  const VERSION = "3.6.32-android-steady";
   const CACHE_PREFIX = "rb-taxi-vycetka-";
   const CONFIG_KEYS = {
     commRate: "rb_commRate",
@@ -1203,6 +1203,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function initKeyboardGuard() {
     const keyboardTarget = "input, select, textarea";
     const visualViewport = window.visualViewport;
+    const isAndroid = /Android/i.test(navigator.userAgent);
+    document.body.classList.toggle("android-keyboard", isAndroid);
     let frameId = 0;
     let lastKeyboardInset = -1;
     let lastKeyboardOpen = false;
