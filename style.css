@@ -2012,3 +2012,106 @@ textarea {
     z-index: 36;
   }
 }
+
+
+/* Visual contrast 3.6.36 */
+:root {
+  --line: rgba(255, 255, 255, 0.15);
+  --line-strong: rgba(243, 209, 122, 0.30);
+  --muted: #c5cee0;
+}
+body {
+  font-family: "Manrope", "Inter", system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+.brand-title,
+#output .title,
+#output .report-total-value,
+#output .summary-card .big,
+.command-card strong,
+.ops-item strong,
+.live-chip strong,
+.kpi-card strong {
+  font-family: "Outfit", "Manrope", "Inter", system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+.label-text,
+.field-hint,
+.shell-subtitle,
+.action-copy span,
+#output .row .key,
+#output .subtitle,
+#output .summary-card .small {
+  color: var(--muted);
+}
+.glass-shell,
+#output,
+.modal-content,
+.install-banner,
+.action-stack {
+  border-color: rgba(243, 209, 122, 0.22);
+}
+.live-chip,
+.kpi-card,
+.command-card,
+.ops-item,
+.status-meter,
+.cash-breakdown div,
+#output .summary-card,
+#output .detail-card,
+#output .row {
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+input,
+select {
+  border-color: rgba(255, 255, 255, 0.17);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+input:focus,
+select:focus {
+  border-color: rgba(243, 209, 122, 0.78);
+  box-shadow: 0 0 0 3px rgba(243, 209, 122, 0.20), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+#output .report-total-card {
+  border-color: rgba(243, 209, 122, 0.42);
+}
+#output .row.accent-odev,
+#output .row.accent-pay,
+#output .row.accent-grand,
+#output .summary-card.cash,
+#output .summary-card.pay,
+#output .summary-card.delta {
+  border-color: rgba(243, 209, 122, 0.24);
+}
+body.light-mode {
+  --muted: #3f4e68;
+  --line: rgba(16, 24, 40, 0.16);
+  --line-strong: rgba(122, 86, 0, 0.30);
+}
+body.light-mode .glass-shell,
+body.light-mode #output,
+body.light-mode .modal-content,
+body.light-mode .install-banner,
+body.light-mode .action-stack {
+  border-color: rgba(122, 86, 0, 0.20);
+}
+body.light-mode input,
+body.light-mode select,
+body.light-mode .live-chip,
+body.light-mode .kpi-card,
+body.light-mode .command-card,
+body.light-mode .ops-item,
+body.light-mode .status-meter,
+body.light-mode .cash-breakdown div,
+body.light-mode #output .summary-card,
+body.light-mode #output .detail-card,
+body.light-mode #output .row {
+  border-color: rgba(16, 24, 40, 0.17);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.70);
+}
+body.light-mode input:focus,
+body.light-mode select:focus {
+  border-color: rgba(122, 86, 0, 0.44);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.20), inset 0 1px 0 rgba(255,255,255,0.80);
+}

@@ -178,3 +178,9 @@ Clean report 3.6.35:
 - Ve vysledne vycetce je schovany radek Minimum podle km v sekci Kilometry.
 - Ve vysledne vycetce a sdilenem exportu je schovana samostatna polozka Nehotovost.
 - Vypocty zustavaji beze zmeny, meni se pouze zobrazeni hotove vycetky.
+
+
+Visual contrast 3.6.36:
+- Pridan citelnejsi font Manrope pro bezny text, cisla zustavaji stabilni diky tabular-nums.
+- Jemne zesileny ramecky bublin, vstupu a vysledkove vycetky v tmavem i svetlem rezimu.
+- Zvyrazneny focus stav inputu bez zmeny layoutu nebo vypoctu.
