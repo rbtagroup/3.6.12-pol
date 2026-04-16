@@ -166,3 +166,9 @@ Android native scroll 3.6.33:
 - Na Androidu je vypnuty dodatecny JS scroll aktivniho pole, aby se nebil s nativnim posunem Chrome klavesnice.
 - iOS vetev zustava beze zmeny, protoze tam keyboard guard funguje spravne.
 - Android si posun pole resi nativne, aplikace jen drzi stabilni keyboard-open layout.
+
+
+Android minimal scroll 3.6.34:
+- Android uz neni bez JS posunu uplne; po otevreni klavesnice se provede jen male jednorazove dorovnani, pokud je aktivni pole porad mimo viditelnou cast.
+- Nepouziva se centrovani pole pres scrollIntoView, aby se nevratilo dvojite poskakovani.
+- iOS vetev zustava beze zmeny.

@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const VERSION = "3.6.33-android-native-scroll";
+  const VERSION = "3.6.34-android-minimal-scroll";
   const CACHE_PREFIX = "rb-taxi-vycetka-";
   const CONFIG_KEYS = {
     commRate: "rb_commRate",
@@ -1246,7 +1246,6 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const keepFocusedFieldVisible = () => {
-      if (isAndroid) return;
       const active = getFocusedInput();
       if (!active) return;
 
@@ -1257,13 +1256,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const rect = currentActive.getBoundingClientRect();
         const viewportHeight = getViewportHeight();
         const topLimit = 88;
-        const bottomLimit = Math.max(180, viewportHeight - 132);
+        const bottomLimit = Math.max(180, viewportHeight - (isAndroid ? 28 : 132));
         const needsScroll = rect.top < topLimit || rect.bottom > bottomLimit;
 
-        if (needsScroll) {
-          currentActive.scrollIntoView({ behavior: "auto", block: "center", inline: "nearest" });
+        if (!needsScroll) return;
+
+        if (isAndroid) {
+          const delta = rect.bottom > bottomLimit
+            ? rect.bottom - bottomLimit
+            : rect.top - topLimit;
+          if (Math.abs(delta) > 4) window.scrollBy({ top: delta, behavior: "auto" });
+          return;
         }
-      }, 300);
+
+        currentActive.scrollIntoView({ behavior: "auto", block: "center", inline: "nearest" });
+      }, isAndroid ? 420 : 300);
     };
 
     visualViewport?.addEventListener("resize", scheduleKeyboardState, { passive: true });
