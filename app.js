@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const VERSION = "3.6.32-android-steady";
+  const VERSION = "3.6.33-android-native-scroll";
   const CACHE_PREFIX = "rb-taxi-vycetka-";
   const CONFIG_KEYS = {
     commRate: "rb_commRate",
@@ -1246,6 +1246,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const keepFocusedFieldVisible = () => {
+      if (isAndroid) return;
       const active = getFocusedInput();
       if (!active) return;
 

@@ -160,3 +160,9 @@ Android steady 3.6.32:
 - Pro Android se pri otevrene klavesnici nepouziva promenlivy keyboard inset, protoze Chrome uz viewport casto zmensuje sam.
 - Pridana trida android-keyboard a pevna spodni rezerva, aby obsah pri psani neposkakoval podle kazde zmeny vysky klavesnice nebo adresniho radku.
 - iOS vetev zustava dynamicka, protoze tam se chovani v realnem testu potvrdilo jako spravne.
+
+
+Android native scroll 3.6.33:
+- Na Androidu je vypnuty dodatecny JS scroll aktivniho pole, aby se nebil s nativnim posunem Chrome klavesnice.
+- iOS vetev zustava beze zmeny, protoze tam keyboard guard funguje spravne.
+- Android si posun pole resi nativne, aplikace jen drzi stabilni keyboard-open layout.

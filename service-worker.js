@@ -1,5 +1,5 @@
 const CACHE_PREFIX = "rb-taxi-vycetka-";
-const CACHE_NAME = CACHE_PREFIX + "v3-6-32-android-steady";
+const CACHE_NAME = CACHE_PREFIX + "v3-6-33-android-native-scroll";
 const APP_SHELL = [
   "./",
   "./index.html",
