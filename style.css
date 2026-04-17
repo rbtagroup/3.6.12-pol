@@ -2348,3 +2348,229 @@ body.light-mode #output .report-total-card {
   word-break: normal;
   line-height: 1.45;
 }
+
+
+/* Wow report 3.6.38 */
+#output {
+  position: relative;
+  overflow: hidden;
+}
+#output::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(120deg, transparent 0%, rgba(246,217,138,0.085) 44%, transparent 64%),
+    linear-gradient(180deg, rgba(255,255,255,0.035), transparent 36%);
+  opacity: 0.82;
+}
+#output > * {
+  position: relative;
+  z-index: 1;
+}
+#output .report-head {
+  min-height: 86px;
+  border-bottom-color: rgba(246,217,138,0.28);
+}
+#output .report-brand {
+  gap: 16px;
+}
+#output .report-mark {
+  width: 58px;
+  height: 58px;
+  border: 1px solid rgba(246,217,138,0.48);
+  background: radial-gradient(circle at 35% 25%, rgba(246,217,138,0.30), rgba(255,255,255,0.05) 52%, rgba(3,6,13,0.28));
+  box-shadow: 0 14px 34px rgba(0,0,0,0.34), 0 0 0 5px rgba(246,217,138,0.055);
+}
+#output .title {
+  font-size: clamp(28px, 5vw, 38px);
+  line-height: 0.95;
+}
+#output .report-badge {
+  border-color: rgba(246,217,138,0.34);
+  background: rgba(246,217,138,0.12);
+}
+#output .report-total-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 118px;
+}
+#output .report-total-card::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(105deg, transparent 12%, rgba(255,255,255,0.16) 42%, transparent 62%);
+  opacity: 0;
+  transform: translateX(-44%);
+}
+#output.is-revealing .report-total-card::after {
+  animation: reportSheen 980ms ease-out 180ms both;
+}
+#output .report-total-label,
+#output .report-total-note,
+#output .report-total-value {
+  position: relative;
+  z-index: 1;
+}
+#output .report-total-value {
+  font-size: clamp(40px, 8vw, 58px);
+  letter-spacing: 0;
+}
+#output .summary-card,
+#output .detail-card,
+#output .row {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+#output .row.accent-grand {
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 12px 26px rgba(0,0,0,0.15);
+}
+@media (prefers-reduced-motion: no-preference) {
+  #output.is-revealing {
+    animation: reportReveal 520ms cubic-bezier(.2,.8,.2,1) both;
+  }
+  #output.is-revealing .summary-card,
+  #output.is-revealing .detail-card {
+    animation: reportItemRise 460ms cubic-bezier(.2,.8,.2,1) both;
+  }
+  #output.is-revealing .summary-card:nth-child(1) { animation-delay: 80ms; }
+  #output.is-revealing .summary-card:nth-child(2) { animation-delay: 120ms; }
+  #output.is-revealing .summary-card:nth-child(3) { animation-delay: 160ms; }
+  #output.is-revealing .summary-card:nth-child(4) { animation-delay: 200ms; }
+  #output.is-revealing .detail-card:nth-child(1) { animation-delay: 180ms; }
+  #output.is-revealing .detail-card:nth-child(2) { animation-delay: 220ms; }
+  #output.is-revealing .detail-card:nth-child(3) { animation-delay: 260ms; }
+}
+@keyframes reportReveal {
+  from { opacity: 0; transform: translateY(18px) scale(0.985); filter: saturate(0.86); }
+  to { opacity: 1; transform: translateY(0) scale(1); filter: saturate(1); }
+}
+@keyframes reportItemRise {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes reportSheen {
+  0% { opacity: 0; transform: translateX(-52%); }
+  28% { opacity: 0.9; }
+  100% { opacity: 0; transform: translateX(72%); }
+}
+@media (max-width: 760px) {
+  #output .report-head {
+    min-height: auto;
+  }
+  #output .report-mark {
+    width: 50px;
+    height: 50px;
+  }
+  #output .report-total-card {
+    min-height: 106px;
+  }
+  #output .report-total-value {
+    font-size: clamp(36px, 11vw, 48px);
+  }
+}
+
+
+/* Wow report mobile fit 3.6.38 */
+@media (max-width: 760px) {
+  #output,
+  #output * {
+    max-width: 100%;
+  }
+  #output .report-head {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 12px;
+  }
+  #output .report-brand,
+  #output .report-brand > div,
+  #output .report-meta {
+    min-width: 0;
+    width: 100%;
+  }
+  #output .title {
+    font-size: clamp(25px, 8vw, 32px);
+    line-height: 1.02;
+  }
+  #output .subtitle,
+  #output .report-status {
+    overflow-wrap: anywhere;
+    text-align: left;
+    white-space: normal;
+  }
+  #output .report-meta {
+    justify-items: stretch;
+  }
+  #output .report-badge {
+    justify-content: center;
+    width: 100%;
+  }
+  #output .report-total-card {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 14px;
+  }
+  #output .summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  #output .detail-grid {
+    grid-template-columns: 1fr;
+  }
+  #output .row {
+    min-width: 0;
+  }
+  #output .row .key {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  #output .row .val {
+    max-width: 48%;
+    overflow-wrap: anywhere;
+    white-space: normal;
+  }
+}
+
+@media (max-width: 760px) {
+  main {
+    max-width: 100vw;
+  }
+  #output {
+    width: calc(100vw - 32px) !important;
+    max-width: calc(100vw - 32px) !important;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  #output .summary-card,
+  #output .detail-card,
+  #output .row,
+  #output .report-total-card {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  #output .summary-grid {
+    grid-template-columns: 1fr;
+  }
+  #output .row {
+    align-items: flex-start;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  #output .row .val {
+    max-width: none;
+    text-align: left;
+    width: 100%;
+  }
+  #output .report-brand {
+    align-items: flex-start;
+  }
+  #output .subtitle {
+    font-size: 12px;
+  }
+}

@@ -190,3 +190,9 @@ Luxury surface 3.6.37:
 - Pridana premium vizualni vrstva black lacquer + champagne gold s vyraznejsimi ramecky a hlubsimi materialy.
 - Zvyraznena hotova vycetka, primarni tlacitko, aktivni pole a karty bez zmeny vypoctu.
 - Zachovana pracovni struktura aplikace, pouze posilena citelnost a wow efekt.
+
+
+Wow report 3.6.38:
+- Hotova vycetka dostala premium certifikatovy moment: silnejsi hlavicku, vetsi logo a vyraznejsi kartu K odevzdani.
+- Po vypoctu se vysledek zobrazi kratkou reveal animaci a jemnym svetelnym prejezdem pres hlavni castku.
+- Vypocty a vstupni formular zustavaji beze zmeny.

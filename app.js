@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const VERSION = "3.6.37-luxury";
+  const VERSION = "3.6.38-wow-report";
   const CACHE_PREFIX = "rb-taxi-vycetka-";
   const CONFIG_KEYS = {
     commRate: "rb_commRate",
@@ -477,7 +477,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (el.output) {
       el.output.innerHTML = "";
       el.output.classList.add("hidden");
-      el.output.classList.remove("is-stale");
+      el.output.classList.remove("is-stale", "is-revealing");
     }
     el.actions?.classList.add("hidden");
     setReportActionsEnabled(true);
@@ -813,7 +813,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (el.liveDelta) el.liveDelta.textContent = formatMoney(metrics.delta);
     updateStatus(metrics);
     el.output.innerHTML = buildReportHtml(metrics);
-    el.output.classList.remove("hidden", "is-stale");
+    el.output.classList.remove("hidden", "is-stale", "is-revealing");
+    void el.output.offsetWidth;
+    el.output.classList.add("is-revealing");
     el.actions?.classList.remove("hidden");
     setReportActionsEnabled(true);
     setFormCollapsed(true);
