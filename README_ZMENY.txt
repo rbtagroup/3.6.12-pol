@@ -184,3 +184,9 @@ Visual contrast 3.6.36:
 - Pridan citelnejsi font Manrope pro bezny text, cisla zustavaji stabilni diky tabular-nums.
 - Jemne zesileny ramecky bublin, vstupu a vysledkove vycetky v tmavem i svetlem rezimu.
 - Zvyrazneny focus stav inputu bez zmeny layoutu nebo vypoctu.
+
+
+Luxury surface 3.6.37:
+- Pridana premium vizualni vrstva black lacquer + champagne gold s vyraznejsimi ramecky a hlubsimi materialy.
+- Zvyraznena hotova vycetka, primarni tlacitko, aktivni pole a karty bez zmeny vypoctu.
+- Zachovana pracovni struktura aplikace, pouze posilena citelnost a wow efekt.
