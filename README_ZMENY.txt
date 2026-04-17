@@ -202,3 +202,9 @@ Refined luxury 3.6.39:
 - Zmensena a zklidnena hotova vycetka po wow experimentu.
 - Odebrany modry dashboardovy dojem, hlavni report je vic graphite/champagne a mene barevny.
 - Animace je jemnejsi a bez svetelneho prejezdu pres castku.
+
+
+Navy compact 3.6.40:
+- Vycetka je vracena bliz k RB navy/gold smeru misto graphite luxury experimentu.
+- Zmensena hlavicka, logo, hlavni castka, karty i radky ve vysledku.
+- Zjednoduseny kontrast a barvy, aby hotova vycetka nepusobila prekombinovane.
