@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const VERSION = "3.6.38-wow-report";
+  const VERSION = "3.6.39-refined-luxury";
   const CACHE_PREFIX = "rb-taxi-vycetka-";
   const CONFIG_KEYS = {
     commRate: "rb_commRate",

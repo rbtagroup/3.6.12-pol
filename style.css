@@ -2574,3 +2574,179 @@ body.light-mode #output .report-total-card {
     font-size: 12px;
   }
 }
+
+
+/* Refined luxury report 3.6.39 */
+#output {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.022)),
+    #080b11;
+  border-color: rgba(246, 217, 138, 0.26);
+  box-shadow: 0 18px 46px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.045);
+}
+#output::before {
+  background: linear-gradient(180deg, rgba(246,217,138,0.040), transparent 34%);
+  opacity: 0.62;
+}
+#output .report-head {
+  min-height: auto;
+  gap: 14px;
+  margin-bottom: 13px;
+  padding-bottom: 13px;
+  border-bottom-color: rgba(246,217,138,0.20);
+}
+#output .report-brand {
+  gap: 12px;
+}
+#output .report-mark {
+  width: 44px;
+  height: 44px;
+  border-color: rgba(246,217,138,0.36);
+  box-shadow: 0 9px 22px rgba(0,0,0,0.30), 0 0 0 3px rgba(246,217,138,0.035);
+}
+#output .title {
+  font-size: clamp(24px, 3.4vw, 30px);
+  line-height: 1.05;
+  color: #f4d783;
+}
+#output .subtitle {
+  margin-top: 5px;
+  color: #b7c0d2;
+}
+#output .report-badge {
+  min-height: 30px;
+  border-color: rgba(246,217,138,0.26);
+  background: rgba(246,217,138,0.075);
+  color: #f4d783;
+}
+#output .report-status.good {
+  border-color: rgba(104, 211, 176, 0.24);
+  background: rgba(104, 211, 176, 0.080);
+  color: #c8efe3;
+}
+#output .report-total-card {
+  min-height: 0;
+  margin-bottom: 12px;
+  padding: 15px 16px;
+  background:
+    linear-gradient(135deg, rgba(246,217,138,0.105), rgba(255,255,255,0.030)),
+    #11151d;
+  border-color: rgba(246,217,138,0.30);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.060);
+}
+#output .report-total-card::after {
+  display: none;
+}
+#output .report-total-label {
+  color: #f4d783;
+  letter-spacing: 0.13em;
+}
+#output .report-total-note {
+  color: #c7cfdd;
+}
+#output .report-total-value {
+  color: #fff0bd;
+  font-size: clamp(32px, 5vw, 42px);
+  line-height: 1;
+  text-shadow: none;
+}
+#output .summary-grid {
+  gap: 10px;
+  margin-bottom: 12px;
+}
+#output .summary-card,
+#output .detail-card,
+#output .row {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.025)),
+    rgba(255,255,255,0.015);
+  border-color: rgba(214, 224, 240, 0.13);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+#output .summary-card {
+  padding: 11px 12px;
+}
+#output .summary-card .small,
+#output .row .key {
+  color: #b7c0d2;
+}
+#output .summary-card .big {
+  font-size: clamp(19px, 2.4vw, 23px);
+}
+#output .summary-card.pay .big,
+#output .summary-card.cash .big,
+#output .summary-card.delta .big,
+#output .row .val {
+  color: #f7f1de;
+}
+#output .summary-card.pay .big {
+  color: #70e0bb;
+}
+#output .summary-card.cash .big {
+  color: #dce6f8;
+}
+#output .detail-card {
+  padding: 11px 12px;
+}
+#output .detail-title {
+  margin-bottom: 10px;
+  color: #f4d783;
+  letter-spacing: 0.13em;
+}
+#output .row {
+  padding: 9px 10px;
+}
+#output .row.accent-grand {
+  background:
+    linear-gradient(135deg, rgba(246,217,138,0.105), rgba(255,255,255,0.025)),
+    #10141c;
+  border-color: rgba(246,217,138,0.26);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.055);
+}
+@media (prefers-reduced-motion: no-preference) {
+  #output.is-revealing {
+    animation: reportRevealSoft 360ms ease-out both;
+  }
+  #output.is-revealing .summary-card,
+  #output.is-revealing .detail-card {
+    animation: none;
+  }
+}
+@keyframes reportRevealSoft {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (max-width: 760px) {
+  #output {
+    padding: 14px;
+  }
+  #output .report-mark {
+    width: 42px;
+    height: 42px;
+  }
+  #output .title {
+    font-size: clamp(23px, 7vw, 28px);
+  }
+  #output .report-total-card {
+    padding: 14px;
+    gap: 10px;
+  }
+  #output .report-total-value {
+    font-size: clamp(31px, 9vw, 40px);
+  }
+  #output .summary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 430px) {
+  #output .summary-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  #output .summary-card {
+    padding: 10px;
+  }
+  #output .summary-card .big {
+    font-size: 19px;
+  }
+}

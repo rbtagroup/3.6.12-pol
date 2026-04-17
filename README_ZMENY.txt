@@ -196,3 +196,9 @@ Wow report 3.6.38:
 - Hotova vycetka dostala premium certifikatovy moment: silnejsi hlavicku, vetsi logo a vyraznejsi kartu K odevzdani.
 - Po vypoctu se vysledek zobrazi kratkou reveal animaci a jemnym svetelnym prejezdem pres hlavni castku.
 - Vypocty a vstupni formular zustavaji beze zmeny.
+
+
+Refined luxury 3.6.39:
+- Zmensena a zklidnena hotova vycetka po wow experimentu.
+- Odebrany modry dashboardovy dojem, hlavni report je vic graphite/champagne a mene barevny.
+- Animace je jemnejsi a bez svetelneho prejezdu pres castku.
