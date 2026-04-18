@@ -208,3 +208,9 @@ Navy compact 3.6.40:
 - Vycetka je vracena bliz k RB navy/gold smeru misto graphite luxury experimentu.
 - Zmensena hlavicka, logo, hlavni castka, karty i radky ve vysledku.
 - Zjednoduseny kontrast a barvy, aby hotova vycetka nepusobila prekombinovane.
+
+
+Navy readable 3.6.41:
+- Radky ve vysledne vycetce jsou na mobilu zpet v jedne bublina / jeden radek.
+- Zesileny kontrast textu a hodnot, mene graphite dojmu, vice NAVY pozadi.
+- Hodnoty a popisky jsou tucnejsi pro lepsi citelnost.

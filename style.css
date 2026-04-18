@@ -2909,3 +2909,114 @@ body.light-mode #output .report-total-card {
 #output .report-status {
   padding-left: 32px;
 }
+
+
+/* Navy readable report 3.6.41 */
+#output {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.070), rgba(255,255,255,0.030)),
+    linear-gradient(180deg, #07162d 0%, #0a1c38 100%);
+}
+#output .summary-card,
+#output .detail-card,
+#output .row {
+  background: rgba(255, 255, 255, 0.070);
+  border-color: rgba(214, 224, 240, 0.18);
+}
+#output .row {
+  align-items: center;
+  display: flex;
+  grid-template-columns: none;
+  justify-content: space-between;
+  gap: 10px;
+}
+#output .row .key {
+  color: #d4deef;
+  flex: 1 1 auto;
+  font-weight: 800;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+#output .row .val {
+  color: #ffffff;
+  flex: 0 0 auto;
+  font-weight: 900;
+  max-width: 52%;
+  overflow: hidden;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: auto;
+}
+#output .summary-card .small {
+  color: #d4deef;
+  font-weight: 900;
+}
+#output .summary-card .big,
+#output .report-total-value,
+#output .row .val {
+  font-weight: 900;
+}
+#output .detail-title,
+#output .report-total-label,
+#output .report-badge,
+#output .title {
+  color: #f6d98a;
+}
+#output .report-total-card {
+  background: linear-gradient(135deg, #09204a, #12366b);
+  border-color: rgba(246, 217, 138, 0.34);
+}
+@media (max-width: 760px) {
+  #output .row {
+    align-items: center;
+    display: flex;
+    grid-template-columns: none;
+    gap: 9px;
+  }
+  #output .row .key {
+    white-space: nowrap;
+  }
+  #output .row .val {
+    max-width: 46%;
+    text-align: right;
+    white-space: nowrap;
+  }
+}
+@media (max-width: 430px) {
+  #output .row {
+    display: flex;
+    grid-template-columns: none;
+  }
+  #output .row .key {
+    font-size: 13px;
+  }
+  #output .row .val {
+    font-size: 14px;
+    max-width: 44%;
+  }
+}
+
+#output .detail-grid,
+#output .summary-grid,
+#output .detail-card,
+#output .summary-card {
+  min-width: 0;
+  width: 100%;
+}
+#output .detail-card,
+#output .summary-card,
+#output .row {
+  overflow: hidden;
+}
+#output .row {
+  max-width: 100%;
+  width: auto;
+}
+@media (max-width: 760px) {
+  #output .row .val {
+    max-width: 42%;
+  }
+}

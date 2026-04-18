@@ -1,5 +1,5 @@
 const CACHE_PREFIX = "rb-taxi-vycetka-";
-const CACHE_NAME = CACHE_PREFIX + "v3-6-40-navy-compact";
+const CACHE_NAME = CACHE_PREFIX + "v3-6-41-navy-readable";
 const APP_SHELL = [
   "./",
   "./index.html",
