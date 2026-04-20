@@ -214,3 +214,9 @@ Navy readable 3.6.41:
 - Radky ve vysledne vycetce jsou na mobilu zpet v jedne bublina / jeden radek.
 - Zesileny kontrast textu a hodnot, mene graphite dojmu, vice NAVY pozadi.
 - Hodnoty a popisky jsou tucnejsi pro lepsi citelnost.
+
+
+Unified RB style 3.6.42:
+- Sjednocen vzhled cele aplikace do jednoho RB ink/gold stylu.
+- Potlaceny vyrazny modry/graphite experiment, karty, vstupy i hotova vycetka maji jednotne materialy.
+- Radky ve vycetce zustavaji jedna bublina / jeden radek, text je kontrastnejsi.
