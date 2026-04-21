@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const VERSION = "3.6.42-unified-rb";
+  const VERSION = "3.6.43-full-audit";
   const CACHE_PREFIX = "rb-taxi-vycetka-";
   const CONFIG_KEYS = {
     commRate: "rb_commRate",
@@ -89,6 +89,12 @@ document.addEventListener("DOMContentLoaded", () => {
     closeSettingsBtn: document.getElementById("closeSettingsBtn"),
     exportSelfTestBtn: document.getElementById("exportSelfTestBtn"),
     resetAppBtn: document.getElementById("resetAppBtn"),
+    reviewPanel: document.getElementById("reviewPanel"),
+    reviewChecklist: document.getElementById("reviewChecklist"),
+    historyBtn: document.getElementById("historyBtn"),
+    historyPanel: document.getElementById("historyPanel"),
+    historyList: document.getElementById("historyList"),
+    clearHistoryBtn: document.getElementById("clearHistoryBtn"),
   };
 
   const FIELD_IDS = [
@@ -97,6 +103,8 @@ document.addEventListener("DOMContentLoaded", () => {
   ];
 
   const DRAFT_KEY = "rb_shiftDraft";
+  const HISTORY_KEY = "rb_shiftHistory";
+  const HISTORY_LIMIT = 10;
 
   const FRIENDLY_NAMES = {
     pristavne: "Přístavné",
@@ -448,6 +456,13 @@ document.addEventListener("DOMContentLoaded", () => {
     return "";
   }
 
+  function focusFirstError() {
+    const firstError = document.querySelector(".input-error");
+    if (!firstError) return;
+    firstError.focus({ preventScroll: true });
+    firstError.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+  }
+
   function syncKm() {
     const values = readFormValues();
     const kmReal = Math.max(0, values.kmEnd - values.kmStart);
@@ -479,6 +494,8 @@ document.addEventListener("DOMContentLoaded", () => {
       el.output.classList.add("hidden");
       el.output.classList.remove("is-stale", "is-revealing");
     }
+    if (el.reviewChecklist) el.reviewChecklist.innerHTML = "";
+    el.reviewPanel?.classList.add("hidden");
     el.actions?.classList.add("hidden");
     setReportActionsEnabled(true);
     setFormCollapsed(false);
@@ -805,7 +822,78 @@ document.addEventListener("DOMContentLoaded", () => {
     `;
   }
 
-  function renderReport(metrics) {
+  function buildReviewChecklist(metrics) {
+    const items = [
+      ["Řidič", metrics.driver || "—"],
+      ["RZ", metrics.rz || "—"],
+      ["Kilometry", formatNumber(metrics.kmStart) + " → " + formatNumber(metrics.kmEnd) + " (" + formatNumber(metrics.kmReal) + " km)"],
+      ["Tržba", formatMoney(metrics.trzba)],
+      ["Výplata", formatMoney(metrics.vyplata)],
+      ["K odevzdání celkem", formatMoney(metrics.settlement)],
+      ["Hotovost u sebe", metrics.hasCashActual ? formatMoney(metrics.cashActual) : "Nezadáno"],
+      [getCashDiffLabel(metrics), metrics.hasCashActual ? formatCashDiff(metrics) : "Kontrola přeskočena"],
+    ];
+
+    return items.map(([label, value]) => "<div class=\"review-item\"><span>" + escapeHtml(label) + "</span><strong>" + escapeHtml(value) + "</strong></div>").join("");
+  }
+
+  function renderReviewPanel(metrics) {
+    if (!el.reviewPanel || !el.reviewChecklist) return;
+    el.reviewChecklist.innerHTML = buildReviewChecklist(metrics);
+    el.reviewPanel.classList.remove("hidden");
+  }
+
+  function readHistory() {
+    try {
+      const history = JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+      return Array.isArray(history) ? history : [];
+    } catch {
+      return [];
+    }
+  }
+
+  function writeHistory(history) {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history.slice(0, HISTORY_LIMIT)));
+  }
+
+  function saveHistory(metrics) {
+    const entry = { ...metrics, historyId: Date.now() + "-" + Math.random().toString(36).slice(2, 8), savedAt: Date.now() };
+    const history = readHistory();
+    history.unshift(entry);
+    writeHistory(history);
+    renderHistory();
+  }
+
+  function metricKeyForField(id) {
+    if (id === "driverName") return "driver";
+    if (id === "shiftType") return "shift";
+    return id;
+  }
+
+  function restoreHistoryEntry(entry) {
+    FIELD_IDS.forEach((id) => {
+      const field = document.getElementById(id);
+      const key = metricKeyForField(id);
+      if (field && Object.prototype.hasOwnProperty.call(entry, key)) {
+        field.value = entry[key] ?? "";
+      }
+    });
+    if (el.kmReal) el.kmReal.value = entry.kmReal ? String(entry.kmReal) : "";
+    clearNotice();
+    clearErrors();
+    renderReport(entry, { skipHistory: true });
+    saveDraft();
+    showNotice("Výčetka z historie je otevřená.", "good");
+  }
+
+  function renderHistory() {
+    if (!el.historyList || !el.historyPanel) return;
+    const history = readHistory();
+    el.historyPanel.classList.toggle("hidden", history.length === 0);
+    el.historyList.innerHTML = history.length ? history.map((item) => "<article class=\"history-item\" data-history-id=\"" + escapeHtml(item.historyId) + "\"><div><strong>" + escapeHtml(item.driver || "Bez řidiče") + "</strong><span>" + escapeHtml(item.rz || "Bez RZ") + " • " + escapeHtml(item.datum || "") + "</span></div><div class=\"history-money\">" + formatMoney(item.settlement) + "</div><div class=\"history-actions\"><button type=\"button\" class=\"secondary\" data-history-action=\"open\">Otevřít</button><button type=\"button\" class=\"secondary danger-button\" data-history-action=\"delete\">Smazat</button></div></article>").join("") : "";
+  }
+
+  function renderReport(metrics, options = {}) {
     isCalculated = true;
     reportIsStale = false;
     lastRenderedData = metrics;
@@ -816,9 +904,11 @@ document.addEventListener("DOMContentLoaded", () => {
     el.output.classList.remove("hidden", "is-stale", "is-revealing");
     void el.output.offsetWidth;
     el.output.classList.add("is-revealing");
+    renderReviewPanel(metrics);
     el.actions?.classList.remove("hidden");
     setReportActionsEnabled(true);
     setFormCollapsed(true);
+    if (!options.skipHistory) saveHistory(metrics);
     el.output?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
@@ -915,10 +1005,11 @@ document.addEventListener("DOMContentLoaded", () => {
       return { host, clone };
     }
 
-    const exportWidth = 900;
+    const exportWidth = 560;
     host.style.width = `${exportWidth}px`;
     clone.style.width = `${exportWidth}px`;
-    clone.innerHTML = buildReportHtml(lastRenderedData);
+    clone.classList.add("export-share-mode", "export-pdf-mode");
+    clone.innerHTML = buildCompactExportHtml(lastRenderedData);
     host.appendChild(clone);
     document.body.appendChild(host);
     return { host, clone };
@@ -961,7 +1052,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (reportIsStale) throw new Error("Údaje se změnily. Nejdřív výčetku přepočítej.");
     await ensureExportLibraries(true);
 
-    const { canvas } = await buildReportImageFile("share");
+    const { canvas } = await buildReportImageFile("pdf");
     const img = canvas.toDataURL("image/png");
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({ orientation: "portrait", unit: "pt", format: "a4" });
@@ -1338,19 +1429,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (validationError) {
         showNotice(validationError, "bad");
+        focusFirstError();
         return;
       }
 
       clearNotice();
-      renderReport(computeMetrics(values));
-      saveDraft();
-      showNotice("Výčetka je hotová a připravená k exportu.", "good", {
-        label: "Vymazat rozepsané",
-        onClick: () => {
-          clearDraft();
-          showNotice("Rozepsaná směna je vymazaná.", "good");
-        },
-      });
+      const metrics = computeMetrics(values);
+      renderReport(metrics);
+      clearDraft();
+      showNotice("Výčetka je hotová, uložená v historii a připravená k exportu.", "good");
     });
 
     FIELD_IDS.forEach((id) => {
@@ -1385,6 +1472,38 @@ document.addEventListener("DOMContentLoaded", () => {
     el.newShiftBtn?.addEventListener("click", () => {
       resetForm({ keepName: true, keepRz: true, keepKmStart: true });
       saveDraft();
+    });
+
+    el.historyBtn?.addEventListener("click", () => {
+      renderHistory();
+      el.historyPanel?.classList.remove("hidden");
+      el.historyPanel?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    el.historyList?.addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-history-action]");
+      if (!button) return;
+      const item = button.closest(".history-item");
+      const historyId = item?.dataset.historyId;
+      const history = readHistory();
+      const entry = history.find((saved) => saved.historyId === historyId);
+      if (!entry) return;
+
+      if (button.dataset.historyAction === "open") {
+        restoreHistoryEntry(entry);
+        return;
+      }
+
+      writeHistory(history.filter((saved) => saved.historyId !== historyId));
+      renderHistory();
+      showNotice("Výčetka byla smazaná z historie.", "good");
+    });
+
+    el.clearHistoryBtn?.addEventListener("click", () => {
+      if (!confirm("Vymazat uložené výčetky z tohoto zařízení?")) return;
+      writeHistory([]);
+      renderHistory();
+      showNotice("Historie výčetek je vymazaná.", "good");
     });
 
     el.shareImgBtn?.addEventListener("click", async () => {
@@ -1426,6 +1545,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (el.appVersion) el.appVersion.textContent = `Verze ${VERSION}`;
   updateHeroConfig();
   restoreDraft();
+  renderHistory();
   bindEvents();
   updateLivePreview();
 });

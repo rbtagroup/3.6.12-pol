@@ -220,3 +220,12 @@ Unified RB style 3.6.42:
 - Sjednocen vzhled cele aplikace do jednoho RB ink/gold stylu.
 - Potlaceny vyrazny modry/graphite experiment, karty, vstupy i hotova vycetka maji jednotne materialy.
 - Radky ve vycetce zustavaji jedna bublina / jeden radek, text je kontrastnejsi.
+
+
+Full audit 3.6.43:
+- Sjednocen export obrazku i PDF s aktualnim RB ink/gold stylem aplikace.
+- PWA theme/background barvy jsou sladene s tmavym RB stylem, bez stare modre.
+- Formularova pole maji name/autocomplete a validace po chybe presune pozornost na prvni problem.
+- Hotove vycetky se ukladaji do historie poslednich 10 smen v tomto zarizeni.
+- Rozepsana smena je oddelena od hotove vycetky; po vypoctu se uklada hotovy zaznam do historie.
+- Pridan kontrolni checklist pred odeslanim a PDF pouziva samostatny sirsi exportni layout.

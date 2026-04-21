@@ -6,20 +6,20 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <meta name="theme-color" content="#0b1738" />
+  <meta name="theme-color" content="#05070d" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>RB TAXI – Výčetka</title>
-  <link rel="manifest" href="manifest.json?v=3.6.42-unified-rb" />
-  <link rel="stylesheet" href="style.css?v=3.6.42-unified-rb" />
+  <link rel="manifest" href="manifest.json?v=3.6.43-full-audit" />
+  <link rel="stylesheet" href="style.css?v=3.6.43-full-audit" />
   <link rel="icon" href="icon-192.png" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet" />
-  <script defer src="vendor/html2canvas.min.js?v=3.6.42-unified-rb"></script>
-  <script defer src="vendor/jspdf.umd.min.js?v=3.6.42-unified-rb"></script>
-  <script defer src="app.js?v=3.6.42-unified-rb"></script>
+  <script defer src="vendor/html2canvas.min.js?v=3.6.43-full-audit"></script>
+  <script defer src="vendor/jspdf.umd.min.js?v=3.6.43-full-audit"></script>
+  <script defer src="app.js?v=3.6.43-full-audit"></script>
 </head>
 <body>
   <svg xmlns="http://www.w3.org/2000/svg" class="sprite-sheet" aria-hidden="true">
@@ -90,11 +90,11 @@
         <div class="form-grid form-grid-3">
           <label>
             <span class="label-text"><svg class="icon"><use href="#icon-user"></use></svg> Řidič</span>
-            <input type="text" id="driverName" placeholder="Jméno řidiče" required />
+            <input type="text" id="driverName" name="driverName" autocomplete="name" placeholder="Jméno řidiče" required />
           </label>
           <label>
             <span class="label-text"><svg class="icon"><use href="#icon-clock"></use></svg> Typ směny</span>
-            <select id="shiftType">
+            <select id="shiftType" name="shiftType" autocomplete="off">
               <option value="den">Denní</option>
               <option value="noc">Noční</option>
               <option value="odpo">Odpolední</option>
@@ -103,7 +103,7 @@
           </label>
           <label>
             <span class="label-text"><svg class="icon"><use href="#icon-car"></use></svg> RZ vozidla</span>
-            <select id="rz">
+            <select id="rz" name="rz" autocomplete="off">
               <option value="">— vyberte RZ —</option>
               <option>1BU0299</option>
               <option>1BU0060</option>
@@ -120,15 +120,15 @@
         <div class="form-grid form-grid-3">
           <label>
             <span class="label-text"><svg class="icon"><use href="#icon-flag"></use></svg> Počáteční km</span>
-            <input type="number" id="kmStart" inputmode="numeric" required />
+            <input type="number" id="kmStart" name="kmStart" autocomplete="off" inputmode="numeric" required />
           </label>
           <label>
             <span class="label-text"><svg class="icon"><use href="#icon-flag"></use></svg> Konečné km</span>
-            <input type="number" id="kmEnd" inputmode="numeric" required />
+            <input type="number" id="kmEnd" name="kmEnd" autocomplete="off" inputmode="numeric" required />
           </label>
           <label>
             <span class="label-text"><svg class="icon"><use href="#icon-road"></use></svg> Najeté km (auto)</span>
-            <input type="number" id="kmReal" readonly class="readonly-field" />
+            <input type="number" id="kmReal" name="kmReal" autocomplete="off" readonly class="readonly-field" />
           </label>
         </div>
 
@@ -158,14 +158,14 @@
 
         <div class="section-heading">Finance</div>
         <div class="form-grid form-grid-2">
-          <label><span class="label-text"><svg class="icon"><use href="#icon-cash"></use></svg> Tržba (Kč)</span><input type="number" id="trzba" min="0" step="1" inputmode="numeric" required /></label>
-          <label><span class="label-text"><svg class="icon"><use href="#icon-flag"></use></svg> Přístavné (Kč)</span><input type="number" id="pristavne" min="0" step="1" inputmode="numeric" aria-describedby="pristavneHelp" /><small id="pristavneHelp" class="field-hint">Přístavné se nepočítá do provize řidiče, ale zůstává v částce k odevzdání.</small></label>
-          <label><span class="label-text"><svg class="icon"><use href="#icon-fuel"></use></svg> Palivo (Kč)</span><input type="number" id="palivo" min="0" step="1" inputmode="numeric" /></label>
-          <label><span class="label-text"><svg class="icon"><use href="#icon-wash"></use></svg> Mytí (Kč)</span><input type="number" id="myti" min="0" step="1" inputmode="numeric" /></label>
-          <label><span class="label-text"><svg class="icon"><use href="#icon-card"></use></svg> Kartou (Kč)</span><input type="number" id="kartou" min="0" step="1" inputmode="numeric" /></label>
-          <label><span class="label-text"><svg class="icon"><use href="#icon-doc"></use></svg> Fakturou (Kč)</span><input type="number" id="fakturou" min="0" step="1" inputmode="numeric" /></label>
-          <label><span class="label-text"><svg class="icon"><use href="#icon-doc"></use></svg> Jiné (Kč)</span><input type="number" id="jine" min="0" step="1" inputmode="numeric" /></label>
-          <label><span class="label-text"><svg class="icon"><use href="#icon-cash"></use></svg> Celá hotovost u sebe (Kč)</span><input type="number" id="cashActual" min="0" step="1" inputmode="numeric" aria-describedby="cashActualHelp" /><small id="cashActualHelp" class="field-hint">Zadej všechnu hotovost, kterou máš u sebe před oddělením výplaty. Přebytek se zobrazí jako dýško.</small></label>
+          <label><span class="label-text"><svg class="icon"><use href="#icon-cash"></use></svg> Tržba (Kč)</span><input type="number" id="trzba" name="trzba" autocomplete="off" min="0" step="1" inputmode="numeric" required /></label>
+          <label><span class="label-text"><svg class="icon"><use href="#icon-flag"></use></svg> Přístavné (Kč)</span><input type="number" id="pristavne" name="pristavne" autocomplete="off" min="0" step="1" inputmode="numeric" aria-describedby="pristavneHelp" /><small id="pristavneHelp" class="field-hint">Přístavné se nepočítá do provize řidiče, ale zůstává v částce k odevzdání.</small></label>
+          <label><span class="label-text"><svg class="icon"><use href="#icon-fuel"></use></svg> Palivo (Kč)</span><input type="number" id="palivo" name="palivo" autocomplete="off" min="0" step="1" inputmode="numeric" /></label>
+          <label><span class="label-text"><svg class="icon"><use href="#icon-wash"></use></svg> Mytí (Kč)</span><input type="number" id="myti" name="myti" autocomplete="off" min="0" step="1" inputmode="numeric" /></label>
+          <label><span class="label-text"><svg class="icon"><use href="#icon-card"></use></svg> Kartou (Kč)</span><input type="number" id="kartou" name="kartou" autocomplete="off" min="0" step="1" inputmode="numeric" /></label>
+          <label><span class="label-text"><svg class="icon"><use href="#icon-doc"></use></svg> Fakturou (Kč)</span><input type="number" id="fakturou" name="fakturou" autocomplete="off" min="0" step="1" inputmode="numeric" /></label>
+          <label><span class="label-text"><svg class="icon"><use href="#icon-doc"></use></svg> Jiné (Kč)</span><input type="number" id="jine" name="jine" autocomplete="off" min="0" step="1" inputmode="numeric" /></label>
+          <label><span class="label-text"><svg class="icon"><use href="#icon-cash"></use></svg> Celá hotovost u sebe (Kč)</span><input type="number" id="cashActual" name="cashActual" autocomplete="off" min="0" step="1" inputmode="numeric" aria-describedby="cashActualHelp" /><small id="cashActualHelp" class="field-hint">Zadej všechnu hotovost, kterou máš u sebe před oddělením výplaty. Přebytek se zobrazí jako dýško.</small></label>
         </div>
         <div class="cash-check-panel" id="cashCheckPanel">
           <div class="status-meter cash-check" id="cashCheckStatus">Celou hotovost můžeš nechat prázdnou, kontrola dýška se pak přeskočí.</div>
@@ -178,8 +178,8 @@
 
         <div class="section-heading">Smluvní jízdy</div>
         <div class="form-grid form-grid-2">
-          <label><span class="label-text"><svg class="icon"><use href="#icon-doc"></use></svg> IAC (počet jízd)</span><input type="number" id="iacCount" min="0" step="1" inputmode="numeric" placeholder="0" /></label>
-          <label><span class="label-text"><svg class="icon"><use href="#icon-doc"></use></svg> SHKM (počet jízd)</span><input type="number" id="shkmCount" min="0" step="1" inputmode="numeric" placeholder="0" /></label>
+          <label><span class="label-text"><svg class="icon"><use href="#icon-doc"></use></svg> IAC (počet jízd)</span><input type="number" id="iacCount" name="iacCount" autocomplete="off" min="0" step="1" inputmode="numeric" placeholder="0" /></label>
+          <label><span class="label-text"><svg class="icon"><use href="#icon-doc"></use></svg> SHKM (počet jízd)</span><input type="number" id="shkmCount" name="shkmCount" autocomplete="off" min="0" step="1" inputmode="numeric" placeholder="0" /></label>
         </div>
 
         <div class="form-actions">
@@ -191,6 +191,16 @@
 
     <section id="output" class="hidden"></section>
 
+    <section id="reviewPanel" class="review-panel hidden" aria-label="Kontrola před odesláním">
+      <div class="review-head">
+        <div>
+          <div class="section-heading">Kontrola před odesláním</div>
+          <p>Rychle zkontroluj údaje, které nejčastěji rozhodují, jestli výčetka sedí.</p>
+        </div>
+      </div>
+      <div id="reviewChecklist" class="review-checklist"></div>
+    </section>
+
     <div id="actions" class="action-stack hidden">
       <div class="action-copy">
         <strong>Výčetka je připravená</strong>
@@ -198,9 +208,21 @@
       </div>
       <button type="button" id="editShiftBtn" class="secondary quiet-action"><svg class="icon"><use href="#icon-doc"></use></svg> Upravit údaje</button>
       <button type="button" id="newShiftBtn" class="secondary quiet-action"><svg class="icon"><use href="#icon-refresh"></use></svg> Nová směna</button>
+      <button type="button" id="historyBtn" class="secondary quiet-action"><svg class="icon"><use href="#icon-doc"></use></svg> Historie</button>
       <button type="button" id="shareImgBtn" class="primary main-export-action"><svg class="icon"><use href="#icon-share"></use></svg> Sdílet výčetku</button>
       <button type="button" id="pdfExport" class="secondary export-action"><svg class="icon"><use href="#icon-pdf"></use></svg> Export do PDF</button>
     </div>
+
+    <section id="historyPanel" class="history-panel hidden" aria-label="Historie výčetek">
+      <div class="history-head">
+        <div>
+          <div class="section-heading">Poslední výčetky</div>
+          <p>Uložené hotové směny v tomto zařízení.</p>
+        </div>
+        <button type="button" id="clearHistoryBtn" class="secondary danger-button">Vymazat historii</button>
+      </div>
+      <div id="historyList" class="history-list"></div>
+    </section>
 
     <section class="bottom-dashboard" aria-label="Souhrn směny">
       <section class="command-rail">
@@ -264,15 +286,15 @@
       <p class="modal-text">Uprav provizi a fixy. Změny se hned promítnou do živého přehledu i finální výčetky.</p>
       <label>
         <span class="label-text"><svg class="icon"><use href="#icon-cash"></use></svg> Provize z tržby (%)</span>
-        <input type="number" id="setComm" min="1" max="100" step="1" inputmode="numeric" />
+        <input type="number" id="setComm" name="setComm" autocomplete="off" min="1" max="100" step="1" inputmode="numeric" />
       </label>
       <label>
         <span class="label-text"><svg class="icon"><use href="#icon-cash"></use></svg> Fix plná směna (Kč)</span>
-        <input type="number" id="setFull" min="0" step="10" inputmode="numeric" />
+        <input type="number" id="setFull" name="setFull" autocomplete="off" min="0" step="10" inputmode="numeric" />
       </label>
       <label>
         <span class="label-text"><svg class="icon"><use href="#icon-cash"></use></svg> Fix 1/2 směna (Kč)</span>
-        <input type="number" id="setHalf" min="0" step="10" inputmode="numeric" />
+        <input type="number" id="setHalf" name="setHalf" autocomplete="off" min="0" step="10" inputmode="numeric" />
       </label>
       <div class="modal-actions">
         <button id="saveSettingsBtn" class="primary" type="button">Uložit</button>
