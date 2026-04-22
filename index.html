@@ -10,16 +10,16 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <title>RB TAXI – Výčetka</title>
-  <link rel="manifest" href="manifest.json?v=3.6.43-full-audit" />
-  <link rel="stylesheet" href="style.css?v=3.6.43-full-audit" />
+  <link rel="manifest" href="manifest.json?v=3.6.44-simplified-flow" />
+  <link rel="stylesheet" href="style.css?v=3.6.44-simplified-flow" />
   <link rel="icon" href="icon-192.png" />
   <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet" />
-  <script defer src="vendor/html2canvas.min.js?v=3.6.43-full-audit"></script>
-  <script defer src="vendor/jspdf.umd.min.js?v=3.6.43-full-audit"></script>
-  <script defer src="app.js?v=3.6.43-full-audit"></script>
+  <script defer src="vendor/html2canvas.min.js?v=3.6.44-simplified-flow"></script>
+  <script defer src="vendor/jspdf.umd.min.js?v=3.6.44-simplified-flow"></script>
+  <script defer src="app.js?v=3.6.44-simplified-flow"></script>
 </head>
 <body>
   <svg xmlns="http://www.w3.org/2000/svg" class="sprite-sheet" aria-hidden="true">
@@ -191,16 +191,6 @@
 
     <section id="output" class="hidden"></section>
 
-    <section id="reviewPanel" class="review-panel hidden" aria-label="Kontrola před odesláním">
-      <div class="review-head">
-        <div>
-          <div class="section-heading">Kontrola před odesláním</div>
-          <p>Rychle zkontroluj údaje, které nejčastěji rozhodují, jestli výčetka sedí.</p>
-        </div>
-      </div>
-      <div id="reviewChecklist" class="review-checklist"></div>
-    </section>
-
     <div id="actions" class="action-stack hidden">
       <div class="action-copy">
         <strong>Výčetka je připravená</strong>
@@ -208,21 +198,9 @@
       </div>
       <button type="button" id="editShiftBtn" class="secondary quiet-action"><svg class="icon"><use href="#icon-doc"></use></svg> Upravit údaje</button>
       <button type="button" id="newShiftBtn" class="secondary quiet-action"><svg class="icon"><use href="#icon-refresh"></use></svg> Nová směna</button>
-      <button type="button" id="historyBtn" class="secondary quiet-action"><svg class="icon"><use href="#icon-doc"></use></svg> Historie</button>
       <button type="button" id="shareImgBtn" class="primary main-export-action"><svg class="icon"><use href="#icon-share"></use></svg> Sdílet výčetku</button>
       <button type="button" id="pdfExport" class="secondary export-action"><svg class="icon"><use href="#icon-pdf"></use></svg> Export do PDF</button>
     </div>
-
-    <section id="historyPanel" class="history-panel hidden" aria-label="Historie výčetek">
-      <div class="history-head">
-        <div>
-          <div class="section-heading">Poslední výčetky</div>
-          <p>Uložené hotové směny v tomto zařízení.</p>
-        </div>
-        <button type="button" id="clearHistoryBtn" class="secondary danger-button">Vymazat historii</button>
-      </div>
-      <div id="historyList" class="history-list"></div>
-    </section>
 
     <section class="bottom-dashboard" aria-label="Souhrn směny">
       <section class="command-rail">

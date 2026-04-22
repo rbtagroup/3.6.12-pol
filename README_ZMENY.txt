@@ -229,3 +229,9 @@ Full audit 3.6.43:
 - Hotove vycetky se ukladaji do historie poslednich 10 smen v tomto zarizeni.
 - Rozepsana smena je oddelena od hotove vycetky; po vypoctu se uklada hotovy zaznam do historie.
 - Pridan kontrolni checklist pred odeslanim a PDF pouziva samostatny sirsi exportni layout.
+
+
+Simplified flow 3.6.44:
+- Odstranena sekce Kontrola pred odeslanim, protoze zdvojovala hotovou vycetku.
+- Odstranena historie poslednich vycetek vcetne ukladani hotovych zaznamu.
+- Pridan hapticky fallback pres navigator.vibrate pro podporovane prohlizece; na iOS web/PWA zustava bezpecny no-op, protoze Safari nativni haptiku webum neposkytuje.
